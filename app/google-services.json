@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1086538561108",
+    "firebase_url": "https://fanfou-34c0a.firebaseio.com",
+    "project_id": "fanfou-34c0a",
+    "storage_bucket": "fanfou-34c0a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1086538561108:android:078debfbc5245845",
+        "android_client_info": {
+          "package_name": "local.nicolas.letsfan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1086538561108-95j78um5n6g4mtphbd8mbnf82aeiva96.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "local.nicolas.letsfan",
+            "certificate_hash": "781E6DBE86357853CF640E4CD7C246A448A8BAB5"
+          }
+        },
+        {
+          "client_id": "1086538561108-abdq3tbgqstg6m8i1h0pic35lmv6314r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_rvmLa7erYHoiGVvnAyqxkj-Blwn9Sro"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1086538561108-abdq3tbgqstg6m8i1h0pic35lmv6314r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

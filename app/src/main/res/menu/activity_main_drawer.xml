@@ -32,5 +32,8 @@
                 android:title="Send" />
         </menu>
     </item>
+    <item android:title="Sign Out"
+        android:id="@+id/sign_out"
+        android:icon="@drawable/common_google_signin_btn_icon_dark" />
 
 </menu>

@@ -3,10 +3,12 @@ package local.nicolas.letsfan;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -33,8 +35,12 @@ public class SignInActivity extends AppCompatActivity implements
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
 
+    // UI Components
     private SignInButton mSignInGoogleButton;
-    private SignInButton mSignInMailButton;
+    private Button mSignInMailButton;
+    private Button mSignUpMailButton;
+    private EditText mUserMailAddress;
+    private EditText mUserPassword;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -48,11 +54,18 @@ public class SignInActivity extends AppCompatActivity implements
 
         // Assign fields
         mSignInGoogleButton = (SignInButton) findViewById(R.id.sign_in_button);
-//        mSignInMailButton = (Button) findViewById(R.id.sign_in_mail_button);
+        mSignInMailButton = (Button) findViewById(R.id.sign_in_mail_button);
+        mSignUpMailButton = (Button) findViewById(R.id.sign_up_mail_button);
 
         // Set click listeners
         mSignInGoogleButton.setOnClickListener(this);
         mSignInMailButton.setOnClickListener(this);
+        mSignUpMailButton.setOnClickListener(this);
+
+        mUserMailAddress = (EditText) findViewById(R.id.user_mail);
+        mUserPassword = (EditText) findViewById(R.id.user_psw);
+//        mEmailValidator = new EmailFieldValidator((TextInputLayout) findViewById(R.id.user_mail_layout));
+//        mPasswordValidator = new RequiredFieldValidator((TextInputLayout) findViewById(R.id.user_psw_layout));
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -74,15 +87,30 @@ public class SignInActivity extends AppCompatActivity implements
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    private void signInByMail() {
-//        Intent signInIntent = Auth.CredentialsApi.
+    private void signInByMail(@NonNull String userMail, @NonNull String userPsw) {
+        mFirebaseAuth.signInWithEmailAndPassword(userMail, userPsw)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "signInByMail:onCompelete:" + task.isSuccessful());
+
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "signInByMail:failed", task.getException());
+                            Toast.makeText(SignInActivity.this, R.string.auth_failed, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
+
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.sign_up_mail_button:
+                createAccount(mUserMailAddress.getText().toString(), mUserPassword.getText().toString());
+
             case R.id.sign_in_mail_button:
-                signInByMail();
+                signInByMail(mUserMailAddress.getText().toString(), mUserPassword.getText().toString());
                 break;
             case R.id.sign_in_button:
                 signIn();
@@ -140,4 +168,19 @@ public class SignInActivity extends AppCompatActivity implements
         }
     }
 
+    public void createAccount (@NonNull String emailAdd, @NonNull String userPSW) {
+        mFirebaseAuth.createUserWithEmailAndPassword(emailAdd, userPSW)
+        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                Log.d(TAG, "createUserWithEmail:OnCompelete:" + task.isSuccessful());
+
+                // If sign in fails, display a message to a message.
+                // If sign in succeeds, the auth state listener will be notified and logic to handle the signed in user can be handled
+                if (!task.isSuccessful()) {
+                    Toast.makeText(SignInActivity.this, R.string.auth_failed, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 }

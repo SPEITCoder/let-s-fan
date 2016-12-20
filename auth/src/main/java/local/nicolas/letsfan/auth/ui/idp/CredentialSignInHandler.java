@@ -1,0 +1,127 @@
+/*
+ * Copyright 2016 Google Inc. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package local.nicolas.letsfan.auth.ui.idp;
+
+import android.app.Activity;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
+
+import local.nicolas.letsfan.auth.IdpResponse;
+import local.nicolas.letsfan.auth.ui.BaseHelper;
+import local.nicolas.letsfan.auth.ui.TaskFailureLogger;
+import local.nicolas.letsfan.auth.ui.account_link.WelcomeBackIdpPrompt;
+import local.nicolas.letsfan.auth.ui.account_link.WelcomeBackPasswordPrompt;
+import local.nicolas.letsfan.auth.util.signincontainer.SaveSmartLock;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.ProviderQueryResult;
+
+public class CredentialSignInHandler implements OnCompleteListener<AuthResult> {
+    private final static String TAG = "CredentialSignInHandler";
+
+    private Activity mActivity;
+    private BaseHelper mHelper;
+    @Nullable private SaveSmartLock mSmartLock;
+    private IdpResponse mResponse;
+    private int mAccountLinkResultCode;
+
+    public CredentialSignInHandler(
+            Activity activity,
+            BaseHelper helper,
+            @Nullable SaveSmartLock smartLock,
+            int accountLinkResultCode,
+            IdpResponse response) {
+        mActivity = activity;
+        mHelper = helper;
+        mSmartLock = smartLock;
+        mResponse = response;
+        mAccountLinkResultCode = accountLinkResultCode;
+    }
+
+    @Override
+    public void onComplete(@NonNull Task<AuthResult> task) {
+        if (task.isSuccessful()) {
+            FirebaseUser firebaseUser = task.getResult().getUser();
+            mHelper.saveCredentialsOrFinish(
+                    mSmartLock,
+                    mActivity,
+                    firebaseUser,
+                    mResponse);
+        } else {
+            if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                final String email = mResponse.getEmail();
+                FirebaseAuth firebaseAuth = mHelper.getFirebaseAuth();
+                firebaseAuth.fetchProvidersForEmail(email)
+                        .addOnFailureListener(new TaskFailureLogger(
+                                TAG, "Error fetching providers for email"))
+                        .addOnSuccessListener(new StartWelcomeBackFlow(email))
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // TODO: What to do when signing in with Credential fails
+                                // and we can't continue to Welcome back flow without
+                                // knowing providers?
+                            }
+                        });
+            } else {
+                mHelper.dismissDialog();
+                Log.e(TAG, "Unexpected exception when signing in with credential",
+                      task.getException());
+            }
+        }
+    }
+
+    private class StartWelcomeBackFlow implements OnSuccessListener<ProviderQueryResult> {
+        private String mEmail;
+
+        public StartWelcomeBackFlow(String email) {
+            mEmail = email;
+        }
+
+        @Override
+        public void onSuccess(@NonNull ProviderQueryResult result) {
+            mHelper.dismissDialog();
+
+            String provider = result.getProviders().get(0);
+            if (provider.equals(EmailAuthProvider.PROVIDER_ID)) {
+                // Start email welcome back flow
+                mActivity.startActivityForResult(
+                        WelcomeBackPasswordPrompt.createIntent(
+                                mHelper.getApplicationContext(),
+                                mHelper.getFlowParams(),
+                                mResponse
+                        ), mAccountLinkResultCode);
+            } else {
+                // Start IDP welcome back flow
+                mActivity.startActivityForResult(
+                        WelcomeBackIdpPrompt.createIntent(
+                                mHelper.getApplicationContext(),
+                                mHelper.getFlowParams(),
+                                result.getProviders().get(0),
+                                mResponse,
+                                mEmail
+                        ), mAccountLinkResultCode);
+            }
+        }
+    }
+}

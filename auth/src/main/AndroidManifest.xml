@@ -1,0 +1,96 @@
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="local.nicolas.letsfan.auth">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="@string/twitter_consumer_secret"/>
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_application_id"/>
+
+        <activity
+            android:name=".KickoffActivity"
+            android:label="@string/default_toolbar_title"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+
+        <activity
+            android:name=".ui.email.EmailHintContainerActivity"
+            android:label="@string/default_toolbar_title"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+
+        <activity
+            android:name=".ui.email.RecoverPasswordActivity"
+            android:label="@string/title_recover_password_activity"
+            android:exported="false"
+            android:theme="@style/FirebaseUI"/>
+
+        <activity
+            android:name=".ui.email.RegisterEmailActivity"
+            android:label="@string/title_register_email_activity"
+            android:exported="false"
+            android:theme="@style/FirebaseUI"/>
+
+        <activity
+            android:name=".ui.email.SignInNoPasswordActivity"
+            android:label="@string/title_sign_in_no_password_activity"
+            android:exported="false"
+            android:theme="@style/FirebaseUI"/>
+
+        <activity
+            android:name=".ui.email.SignInActivity"
+            android:label="@string/title_sign_in_activity"
+            android:exported="false"
+            android:theme="@style/FirebaseUI"/>
+
+        <activity
+            android:name=".ui.account_link.WelcomeBackIdpPrompt"
+            android:label="@string/title_welcome_back_idp_prompt"
+            android:exported="false"
+            android:theme="@style/FirebaseUI"/>
+
+        <activity
+            android:name=".ui.account_link.WelcomeBackPasswordPrompt"
+            android:label="@string/title_welcome_back_password_prompt"
+            android:exported="false"
+            android:theme="@style/FirebaseUI"/>
+
+        <activity
+            android:name=".ui.idp.AuthMethodPickerActivity"
+            android:label="@string/default_toolbar_title"
+            android:exported="false"
+            android:theme="@style/FirebaseUI"/>
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:label="@string/app_name"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"/>
+
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="@string/facebook_login_protocol_scheme"/>
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>

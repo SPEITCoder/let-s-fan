@@ -1,15 +1,13 @@
 package local.nicolas.letsfan;
 
+import local.nicolas.letsfan.auth.AuthUI;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
-import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,22 +17,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.firebase.ui.auth.*;
+
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.auth.EmailAuthProvider;
-import com.google.firebase.auth.FacebookAuthProvider;
-import com.google.firebase.auth.*;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -45,9 +39,13 @@ import static android.app.PendingIntent.getActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit2.http.Streaming;
+import local.nicolas.letsfan.auth.ui.ResultCodes;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -57,8 +55,9 @@ public class MainActivity extends AppCompatActivity
 
     // Google and Firebase
     private FirebaseAuth mFirebaseAuth;
-    private FirebaseUser mFirebaseUser;
     private static final int RC_SIGN_IN = 9001;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference userRef;
 
     private TextView mNavUserName;
     private TextView mNavUserMail;
@@ -68,7 +67,6 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton fab;
     private DrawerLayout drawer;
     private NavigationView navigationView;
-    private NavigationMenu navigationMenu;
 
     private ActionBarDrawerToggle toggle;
     private View mRootView;
@@ -80,7 +78,8 @@ public class MainActivity extends AppCompatActivity
 
         // Authentication
         mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        userRef = mFirebaseDatabase.getReference("users");
 
         // UI binding
         setContentView(R.layout.activity_main);
@@ -102,7 +101,15 @@ public class MainActivity extends AppCompatActivity
         });
 
         toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                updateNav();
+
+                return;
+            }
+        };
         drawer.addDrawerListener(toggle);
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -130,9 +137,25 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == RC_SIGN_IN) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                mFirebaseUser = mFirebaseAuth.getCurrentUser();
                 updateNav();
-//                Snackbar.make(mRootView, "Signed in successfully.", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mRootView, "Signed in successfully.", Snackbar.LENGTH_LONG).show();
+                Query currentUserQuery = userRef.equalTo(mFirebaseAuth.getCurrentUser().getUid());
+                if ( !currentUserQuery.equals(mFirebaseAuth.getCurrentUser().getUid())) {
+                    // prompt to create new user
+                    Log.d(TAG, "onActivityResult: Create user in database.");
+                    // temporairy solution
+                    User newUser = new User("Nicolas", "YING", mFirebaseAuth.getCurrentUser().getEmail(), 3.0, 3.0, 3.0, 3.0, 3.0, 3.0);
+                    userRef.child(mFirebaseAuth.getCurrentUser().getUid()).setValue(newUser);
+                }
+                return;
+            } else if (resultCode == RESULT_CANCELED) {
+                Snackbar.make(mRootView, "Signed in cancelled.", Snackbar.LENGTH_LONG).show();
+                return;
+            } else if (resultCode == ResultCodes.RESULT_NO_NETWORK) {
+                Snackbar.make(mRootView, "Signed in failed for no internet.", Snackbar.LENGTH_LONG).show();
+                return;
+            } else {
+                Snackbar.make(mRootView, "Unknown response.", Snackbar.LENGTH_LONG).show();
             }
         }
     }
@@ -140,8 +163,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
-
     }
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -171,8 +194,26 @@ public class MainActivity extends AppCompatActivity
         mUserAvatar = (ImageView) findViewById(R.id.userAvatar);
         mNavSignInButton = (Button) findViewById(R.id.sign_in_button);
 
-        // Authentication-involved UI updates
-        updateNav();
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        navigationView.getMenu().clear();
+        navigationView.inflateMenu(R.menu.activity_main_drawer);
+//
+//        if (mFirebaseAuth.getCurrentUser() == null) {
+//            MenuItem temp = navigationView.getMenu().getItem(R.id.nav_initiate_invitation);
+//            temp.setCheckable(false);
+//            navigationView.getMenu().getItem(R.id.nav_manage_user_profile).setCheckable(false);
+//            navigationView.getMenu().getItem(R.id.nav_section_sign_out).setCheckable(false);
+//        } else {
+//            navigationView.getMenu().getItem(R.id.nav_initiate_invitation).setCheckable(true);
+//            navigationView.getMenu().getItem(R.id.nav_manage_user_profile).setCheckable(true);
+//            navigationView.getMenu().getItem(R.id.nav_section_sign_out).setCheckable(true);
+//        }
         return true;
     }
 
@@ -200,22 +241,22 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_initiate_invitation) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_open_invitation_list) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_manage_user_profile) {
+
+        } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_help) {
 
-        } else if (id == R.id.sign_out) {
-            mFirebaseAuth.signOut();
-            mFirebaseUser = mFirebaseAuth.getCurrentUser();
-            updateNav();
+        } else if (id == R.id.nav_sign_out) {
+
+            signOut();
+            drawer.closeDrawer(GravityCompat.START);
             return true;
         }
 
@@ -224,24 +265,38 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @OnClick(R.id.nav_sign_out)
+    public void signOut() {
+        AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    updateNav();
+                } else {
+                    Snackbar.make(mRootView, "Sign out failed.", Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
     @Override
     public void onResume() {
         super.onResume();
     }
 
     private void updateNav() {
-        if(mFirebaseUser != null) {
-            if (mFirebaseUser.getPhotoUrl() != null) {
+        if(mFirebaseAuth.getCurrentUser() != null) {
+            if (mFirebaseAuth.getCurrentUser().getPhotoUrl() != null) {
                 Glide.with(this)
-                        .load(mFirebaseUser.getPhotoUrl())
+                        .load(mFirebaseAuth.getCurrentUser().getPhotoUrl())
                         .fitCenter()
                         .into(mUserAvatar);
             }
 
             mNavUserMail.setText(
-                    TextUtils.isEmpty(mFirebaseUser.getEmail()) ? "No email" : mFirebaseUser.getEmail());
+                    TextUtils.isEmpty(mFirebaseAuth.getCurrentUser().getEmail()) ? "No email" : mFirebaseAuth.getCurrentUser().getEmail());
             mNavUserName.setText(
-                    TextUtils.isEmpty(mFirebaseUser.getDisplayName()) ? "No display name" : mFirebaseUser.getDisplayName());
+                    TextUtils.isEmpty(mFirebaseAuth.getCurrentUser().getDisplayName()) ? "No display name" : mFirebaseAuth.getCurrentUser().getDisplayName());
 
             mNavUserMail.setVisibility(View.VISIBLE);
             mNavSignInButton.setVisibility(View.GONE);
@@ -257,6 +312,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     signIn(v);
+                    drawer.closeDrawer(GravityCompat.START);
                 }
             });
         }

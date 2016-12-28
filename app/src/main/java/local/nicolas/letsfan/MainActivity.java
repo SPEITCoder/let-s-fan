@@ -3,6 +3,7 @@ package local.nicolas.letsfan;
 import local.nicolas.letsfan.auth.AuthUI;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -28,6 +29,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity
     private static final int RC_SIGN_IN = 9001;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference userRef;
+    private DatabaseReference inviRef;
 
     private TextView mNavUserName;
     private TextView mNavUserMail;
@@ -71,6 +74,8 @@ public class MainActivity extends AppCompatActivity
     private ActionBarDrawerToggle toggle;
     private View mRootView;
 
+    private User currentUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +85,7 @@ public class MainActivity extends AppCompatActivity
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         userRef = mFirebaseDatabase.getReference("users");
+        inviRef = mFirebaseDatabase.getReference("invitations");
 
         // UI binding
         setContentView(R.layout.activity_main);
@@ -143,9 +149,11 @@ public class MainActivity extends AppCompatActivity
                 if ( !currentUserQuery.equals(mFirebaseAuth.getCurrentUser().getUid())) {
                     // prompt to create new user
                     Log.d(TAG, "onActivityResult: Create user in database.");
-                    // temporairy solution
-                    User newUser = new User("Nicolas", "YING", mFirebaseAuth.getCurrentUser().getEmail(), 3.0, 3.0, 3.0, 3.0, 3.0, 3.0);
-                    userRef.child(mFirebaseAuth.getCurrentUser().getUid()).setValue(newUser);
+                    // temporary solution
+                    String localNickName = mFirebaseAuth.getCurrentUser().getDisplayName();
+                    String localEmail = mFirebaseAuth.getCurrentUser().getEmail();
+                    currentUser = new User(localNickName, "Nicolas", "YING", localEmail, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, true);
+                    currentUser.createUserInDatabase(mFirebaseDatabase, mFirebaseAuth.getCurrentUser().getUid());
                 }
                 return;
             } else if (resultCode == RESULT_CANCELED) {

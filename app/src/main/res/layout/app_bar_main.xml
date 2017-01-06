@@ -16,7 +16,7 @@
         android:id="@+id/toolbar" />
 
     <include layout="@layout/content_invitation_list"
-        android:id="@+id/fab"
+        android:id="@+id/fragJoin"
         android:layout_height="match_parent"
         android:visibility="visible"
         android:layout_width="match_parent"
@@ -41,7 +41,7 @@
         app:fabSize="normal"
         app:srcCompat="@android:drawable/ic_menu_add"
         android:id="@+id/floatingActionButton2"
-        app:layout_anchor="@+id/fab"
+        app:layout_anchor="@+id/fragJoin"
         app:layout_anchorGravity="center_vertical|right"
         android:layout_gravity="center_vertical|center_horizontal"
         app:elevation="11dp"

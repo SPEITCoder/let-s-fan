@@ -8,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        tools:listitem="@layout/invitation_card">
+        tools:listitem="@layout/invitation_card"
+        android:id="@+id/RecyclerViewInvitationList">
 
     </android.support.v7.widget.RecyclerView>
 

@@ -16,6 +16,8 @@ public class Invitation {
     String restaurantName;
     String startTime;
     String endTime;
+    String creationTime;
+
     static DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
     static DatabaseReference restRef = FirebaseDatabase.getInstance().getReference("restos");
     public Invitation (String _date, String _organizer, Double _tasteVariation, String _restaurant, String _startTime, String _endTime) {
@@ -27,5 +29,6 @@ public class Invitation {
         restaurantName = restRef.child(restaurant).child("name").getKey();
         startTime = _startTime;
         endTime = _endTime;
+        creationTime =
     }
 }

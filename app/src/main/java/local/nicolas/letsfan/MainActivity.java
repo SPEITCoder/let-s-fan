@@ -7,6 +7,8 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -25,13 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -71,6 +67,11 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private NavigationView navigationView;
 
+
+    private RecyclerView mInvitationView;
+    private RecyclerView.Adapter mInvitationCardAdapter;
+    private RecyclerView.LayoutManager mInvitationListLayoutManager;
+
     private ActionBarDrawerToggle toggle;
     private View mRootView;
 
@@ -95,6 +96,20 @@ public class MainActivity extends AppCompatActivity
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         mRootView = navigationView.getRootView();
+
+        mInvitationView = (RecyclerView) findViewById(R.id.RecyclerViewInvitationList);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mInvitationView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        mInvitationListLayoutManager = new LinearLayoutManager(this);
+        mInvitationView.setLayoutManager(mInvitationListLayoutManager);
+
+        // specify an adapter (see also next example)
+        mInvitationCardAdapter = new MyInvitaionAdapter(InvitationList);
+        mInvitationView.setAdapter(mInvitationCardAdapter);
 
         setSupportActionBar(toolbar);
 

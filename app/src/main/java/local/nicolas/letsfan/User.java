@@ -50,8 +50,9 @@ public class User {
         // invitation
         DatabaseReference inviRef = db.getReference("invitations");
         DatabaseReference currentRef = inviRef.push();
-        currentRef.setValue(new Invitation(_date, uid, this.tasteVariation, _restaurant, _startTime, _endTime));
+//        currentRef.setValue(new Invitation(_date, uid, this.tasteVariation, _restaurant, _startTime, _endTime));
         String pushID = currentRef.getKey();
+        inviRef.child(pushID).setValue(new Invitation(_date, uid, this.tasteVariation, _restaurant, _startTime, _endTime));
 
         // index on invitationAttendees
         DatabaseReference invAttendeeRef = db.getReference("invitationAttendees");

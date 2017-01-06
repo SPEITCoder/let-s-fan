@@ -1,6 +1,5 @@
 package local.nicolas.letsfan;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -36,7 +35,7 @@ public class CreateInvitationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_invitation);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_123);
         setSupportActionBar(toolbar);
 
         //Intent intent = getIntent();
@@ -54,10 +53,11 @@ public class CreateInvitationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 currentUser.createInvitation(app.getmFirebaseDatabase(),app.getmFirebaseAuth().getCurrentUser().getUid(),
-                        starttime.getText().toString(),endtime.getText().toString(),"mydate","myrestaurant");
+                        starttime.getText().toString(),"endtimetest","mydate","myrestaurant");
                 Snackbar.make(view, "Invitation is added!" , Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                startActivity(new Intent(CreateInvitationActivity.this, MainActivity.class));
+
+                //Activity(new Intent(CreateInvitationActivity.this, MainActivity.class));
             }
         });
 

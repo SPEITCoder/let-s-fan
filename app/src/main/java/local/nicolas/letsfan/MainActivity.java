@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity
         // UI binding
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_123);
         fab = (FloatingActionButton) findViewById(R.id.floatingActionButton2);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity
                     String localNickName = mFirebaseAuth.getCurrentUser().getDisplayName();
                     String localEmail = mFirebaseAuth.getCurrentUser().getEmail();
                     currentUser = new User(localNickName, "Nicolas", "YING", localEmail, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, true);
-                    currentUser.createUserInDatabase(mFirebaseDatabase, mFirebaseAuth.getCurrentUser().getUid());
+                    currentUser.createUserInDatabase(mFirebaseAuth.getCurrentUser().getUid());
                 }
                 return;
             } else if (resultCode == RESULT_CANCELED) {

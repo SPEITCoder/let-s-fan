@@ -1,53 +1,41 @@
 package local.nicolas.letsfan;
 
-import local.nicolas.letsfan.auth.AuthUI;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import static android.app.PendingIntent.getActivity;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import local.nicolas.letsfan.auth.ui.ResultCodes;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.OnClick;
+import local.nicolas.letsfan.auth.AuthUI;
+import local.nicolas.letsfan.auth.ui.ResultCodes;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -70,23 +58,28 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton fab;
     private DrawerLayout drawer;
     private NavigationView navigationView;
+    private RecyclerView mRecyclerView;
 
     private ActionBarDrawerToggle toggle;
     private View mRootView;
-
     private User currentUser;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // Authentication
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         userRef = mFirebaseDatabase.getReference("users");
         inviRef = mFirebaseDatabase.getReference("invitations");
-
+        if (currentUser==null)
+        {
+            if(mFirebaseAuth.getCurrentUser()!=null) {
+                String localNickName = mFirebaseAuth.getCurrentUser().getDisplayName();
+                String localEmail = mFirebaseAuth.getCurrentUser().getEmail();
+                currentUser = new User(localNickName, "Nicolas", "YING", localEmail, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, true);
+            }
+        }
         // UI binding
         setContentView(R.layout.activity_main);
 
@@ -95,13 +88,34 @@ public class MainActivity extends AppCompatActivity
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         mRootView = navigationView.getRootView();
+        mRecyclerView=(RecyclerView) findViewById(R.id.recyclerView);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+        String[] dataset = new String[100];
+        for (int i = 0; i < dataset.length; i++) {
+            dataset[i] = "item" + i;
+        }
+        RecyclerAdapter mAdapter = new RecyclerAdapter(dataset);
+        mRecyclerView.setAdapter(mAdapter);
 
         setSupportActionBar(toolbar);
+
+        final Data app = (Data) getApplication();
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, CreateInvitationActivity.class));
+                // temporary solution
+                //String localNickName = mFirebaseAuth.getCurrentUser().getDisplayName();
+                //String localEmail = mFirebaseAuth.getCurrentUser().getEmail();
+                //currentUser = new User("localNickName", "Nicolas", "YING", "localEmail", 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, true);
+                //currentUser.createUserInDatabase(mFirebaseDatabase, mFirebaseAuth.getCurrentUser().getUid());
+                //store currentUser
+                app.setmFirebaseDatabase(mFirebaseDatabase);
+                app.setmFirebaseAuth(mFirebaseAuth);
+                Intent intent= new Intent(MainActivity.this,CreateInvitationActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -137,6 +151,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        final Data app=(Data)getApplication();
         super.onActivityResult(requestCode, resultCode, data);
         // Check which request we're responding to
         if (requestCode == RC_SIGN_IN) {
@@ -246,9 +261,20 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
 
         // Handle navigation view item clicks here.
+        final Data app = (Data) getApplication();
         int id = item.getItemId();
 
         if (id == R.id.nav_initiate_invitation) {
+            //String localNickName = mFirebaseAuth.getCurrentUser().getDisplayName();
+            //String localEmail = mFirebaseAuth.getCurrentUser().getEmail();
+            //currentUser = new User("localNickName", "Nicolas", "YING", "localEmail", 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, true);
+            //currentUser.createUserInDatabase(mFirebaseDatabase, "Uid");
+            //currentUser.createUserInDatabase(mFirebaseDatabase, mFirebaseAuth.getCurrentUser().getUid());
+            //store currentUser
+            app.setUser(currentUser);
+            app.setmFirebaseDatabase(mFirebaseDatabase);
+            app.setmFirebaseAuth(mFirebaseAuth);
+            startActivity(new Intent(MainActivity.this, CreateInvitationActivity.class));
 
         } else if (id == R.id.nav_open_invitation_list) {
 
@@ -323,6 +349,11 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
+    }
+
+    private void showCurrentInvitation()
+    {
+
     }
 
 

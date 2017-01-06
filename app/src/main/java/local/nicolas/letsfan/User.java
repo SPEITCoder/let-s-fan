@@ -1,11 +1,7 @@
 package local.nicolas.letsfan;
 
-import android.provider.ContactsContract;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.ArrayList;
 
 /**
  * Created by soshy on 20/12/2016.
@@ -28,6 +24,11 @@ public class User {
         tasteVariation = _taste_variation;
         isInfoPublic = _is_public;
         tasteVector = new TasteVector(_taste_sour, _taste_sweet, _taste_bitter, _taste_spice, _taste_salty);
+    }
+
+    public String Stringtest()
+    {
+        return "String test: successful!";
     }
 
     public void createUserInDatabase (FirebaseDatabase db, String uid) {
@@ -64,6 +65,11 @@ public class User {
         userInEventsRef.child(uid).child(pushID).child("date").setValue(_date);
         userInEventsRef.child(uid).child(pushID).child("organizerName").setValue(nickName);
     }
+
+    public void getUser(String uid)
+    {
+
+    }
 }
 
 class TasteVector {
@@ -75,4 +81,6 @@ class TasteVector {
     public TasteVector(Double _sour, Double _sweet, Double _bitter, Double _spice, Double _salty) {
         sour = _sour; sweet = _sweet; bitter = _bitter; spice = _spice; salty = _salty;
     }
+
+
 }

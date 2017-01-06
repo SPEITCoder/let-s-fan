@@ -41,7 +41,10 @@
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_add_black_24dp" />
 
+
+
     <include layout="@layout/content_create_invitation" />
 
 
 </android.support.design.widget.CoordinatorLayout>
+

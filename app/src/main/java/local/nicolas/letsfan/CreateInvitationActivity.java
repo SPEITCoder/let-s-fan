@@ -53,7 +53,7 @@ public class CreateInvitationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 currentUser.createInvitation(app.getmFirebaseDatabase(),app.getmFirebaseAuth().getCurrentUser().getUid(),
-                        starttime.getText().toString(),"endtimetest","mydate","myrestaurant");
+                        starttime.getText().toString(),"endtimetest","mydate","rid1");
                 Snackbar.make(view, "Invitation is added!" , Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 

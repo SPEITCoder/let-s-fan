@@ -23,7 +23,6 @@ public class CreateInvitationActivity extends AppCompatActivity {
 
     private String date;
     private String restaurant;
-    //private Invitation invitation;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.

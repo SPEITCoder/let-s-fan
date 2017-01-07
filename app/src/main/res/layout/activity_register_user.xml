@@ -70,7 +70,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="First Name"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:textColorHint="?attr/colorPrimaryDark" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"

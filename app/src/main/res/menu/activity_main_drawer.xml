@@ -15,7 +15,7 @@
             android:title="@string/join_bottom_nav" />
         <item
             android:id="@+id/nav_manage_user_profile"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_event_available_black_24dp"
             android:title="@string/profile_bottom_nav" />
     </group>
     <group

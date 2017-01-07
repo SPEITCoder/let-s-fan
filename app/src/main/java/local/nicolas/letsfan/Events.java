@@ -1,12 +1,13 @@
 package local.nicolas.letsfan;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 
 /**
  * Created by soshy on 07/01/2017.
  */
 
-public class Events {
+public class Events implements Serializable{
     private Long creationTime;
     private Long dateDay;
     private Long dateMonth;

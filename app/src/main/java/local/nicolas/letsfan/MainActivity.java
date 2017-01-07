@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 if (currentUser == null) {
                     startActivityForResult(new Intent(MainActivity.this, RegisterUserActivity.class), RC_CREATE_USER);
-                    Snackbar.make(mRootView, "Finish up registration first.", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(mRootView, "Finish up registration first.", Snackbar.LENGTH_LONG).setActionTextColor(getColor(R.color.white)).show();
                 } else {
                     Intent mIntentInvitation = new Intent(MainActivity.this, CreateInvitationActivity.class);
                     mIntentInvitation.putExtra("currentUser", currentUser);
@@ -296,32 +296,32 @@ public class MainActivity extends AppCompatActivity
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 updateNav();
-                Snackbar.make(mRootView, "Signed in successfully.", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mRootView, "Signed in successfully.", Snackbar.LENGTH_LONG).setActionTextColor(getColor(R.color.white)).show();
                 return;
             } else if (resultCode == RESULT_CANCELED) {
-                Snackbar.make(mRootView, "Signed in cancelled.", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mRootView, "Signed in cancelled.", Snackbar.LENGTH_LONG).setActionTextColor(getColor(R.color.white)).show();
                 return;
             } else if (resultCode == ResultCodes.RESULT_NO_NETWORK) {
-                Snackbar.make(mRootView, "Signed in failed for no internet.", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mRootView, "Signed in failed for no internet.", Snackbar.LENGTH_LONG).setActionTextColor(getColor(R.color.white)).show();
                 return;
             } else {
-                Snackbar.make(mRootView, "Unknown response.", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mRootView, "Unknown response.", Snackbar.LENGTH_LONG).setActionTextColor(getColor(R.color.white)).show();
             }
         } else if (requestCode == RC_CREATE_INVITATION) {
             if (resultCode == RESULT_OK) {
-                Snackbar.make(mRootView, "Invitation is added!" , Snackbar.LENGTH_LONG)
+                Snackbar.make(mRootView, "Invitation is added!" , Snackbar.LENGTH_LONG).setActionTextColor(getColor(R.color.white))
                         .setAction("Action", null).show();
             } else {
-                Snackbar.make(mRootView, "Invitation creation failed!" , Snackbar.LENGTH_LONG)
+                Snackbar.make(mRootView, "Invitation creation failed!" , Snackbar.LENGTH_LONG).setActionTextColor(getColor(R.color.white))
                         .setAction("Action", null).show();
             }
         } else if (requestCode == RC_CREATE_USER) {
             if (resultCode == RESULT_OK) {
-                Snackbar.make(mRootView, "User is successfully registered!" , Snackbar.LENGTH_LONG)
+                Snackbar.make(mRootView, "User is successfully registered!" , Snackbar.LENGTH_LONG).setActionTextColor(getColor(R.color.white))
                         .setAction("Action", null).show();
                 currentUser = (User) data.getSerializableExtra("currentUser");
             } else {
-                Snackbar.make(mRootView, "User registration failure!" , Snackbar.LENGTH_LONG)
+                Snackbar.make(mRootView, "User registration failure!" , Snackbar.LENGTH_LONG).setActionTextColor(getColor(R.color.white))
                         .setAction("Action", null).show();
             }
         }
@@ -428,9 +428,9 @@ public class MainActivity extends AppCompatActivity
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     updateNav();
-                    Snackbar.make(mRootView, "Sign out successful.", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(mRootView, "Sign out successful.", Snackbar.LENGTH_LONG).setActionTextColor(getColor(R.color.white)).show();
                 } else {
-                    Snackbar.make(mRootView, "Sign out failed.", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(mRootView, "Sign out failed.", Snackbar.LENGTH_LONG).setActionTextColor(getColor(R.color.white)).show();
                 }
             }
         });
@@ -460,12 +460,27 @@ public class MainActivity extends AppCompatActivity
                     MyInvitationViewHolder.class,
                     inviRef.orderByChild("organizer").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                 @Override
-                protected void populateViewHolder(MyInvitationViewHolder viewHolder, Invitation invitation, int position) {
+                protected void populateViewHolder(MyInvitationViewHolder viewHolder, final Invitation invitation, final int position) {
                     //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                     viewHolder.restaurantTextView.setText(invitation.getRestaurantName());
                     viewHolder.dateTextView.setDate(invitation.getDateYear().intValue(), invitation.getDateMonth().intValue(), invitation.getDateDay().intValue());
                     viewHolder.startTextView.setTime(invitation.getStartTimeHour().intValue(), invitation.getStartTimeMinute().intValue());
                     viewHolder.endTextView.setTime(invitation.getEndTimeHour().intValue(), invitation.getEndTimeMinute().intValue());
+
+                    viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view){
+                            Log.w(TAG, "You clicked on " + position);
+                            //mFirebaseAdapter.getRef(position).removeValue();
+                            MyInvitation_Dialog invitation_dialog = new MyInvitation_Dialog();
+                            Bundle mBundle = new Bundle();
+                            mBundle.putString("pushId", invitation.getId());
+                            mBundle.putSerializable("currentUser", currentUser);
+                            mBundle.putSerializable("invitation", invitation);
+                            invitation_dialog.setArguments(mBundle);
+                            invitation_dialog.show(getFragmentManager(),"invitationDialog");
+                        }
+                    });
                 }
             };
 
@@ -475,11 +490,24 @@ public class MainActivity extends AppCompatActivity
                     MyEventViewHolder.class,
                     mFirebaseDatabase.getReference("userInEvents").child(mFirebaseAuth.getCurrentUser().getUid())) {
                 @Override
-                protected void populateViewHolder(MyEventViewHolder viewHolder, Events event, int position) {
+                protected void populateViewHolder(MyEventViewHolder viewHolder, final Events event, final int position) {
                     //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                     viewHolder.organizerTextView.setText(event.getOrganizerName());
                     viewHolder.dateTextView.setDate(event.getDateYear().intValue(), event.getDateMonth().intValue(), event.getDateDay().intValue());
                     viewHolder.RestaurantTextView.setText(event.getRestaurantName());
+
+                    viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view){
+                            Log.w(TAG, "You clicked on " + position);
+                            //mFirebaseAdapter.getRef(position).removeValue();
+                            EventDialog eventDialog = new EventDialog();
+                            Bundle mBundle = new Bundle();
+                            mBundle.putString("pushId", event.getId());
+                            eventDialog.setArguments(mBundle);
+                            eventDialog.show(getFragmentManager(),"invitationDialog");
+                        }
+                    });
 
                 }
             };

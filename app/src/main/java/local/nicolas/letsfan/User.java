@@ -85,6 +85,8 @@ public class User implements Serializable {
         userInEventsRef.child(uid).child(pushID).child("restaurantName").setValue(invitation.getRestaurantName());
         userInEventsRef.child(uid).child(pushID).child("creationTime").setValue(invitation.getCreationTime());
         userInEventsRef.child(uid).child(pushID).child("id").setValue(pushID);
+
+
     }
 
     public void createInvitation (FirebaseDatabase db, String uid, int startTimeHour, int startTimeMinute, int endTimeHour, int endTimeMinute, int dateYear, int dateMonth, int dateDay, String _restaurant, String _restaurantName) {

@@ -13,6 +13,7 @@
         <item name="android:windowBackground">@color/white</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:textColorPrimary">@color/colorPrimaryDark</item>
+        <item name="android:actionBarPopupTheme">@color/white</item>
         <item name="colorButtonNormal">@color/colorAccent</item>
     </style>
 

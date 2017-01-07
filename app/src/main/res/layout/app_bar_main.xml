@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+
+    android:layout_weight="1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -18,12 +20,24 @@
 
     <include layout="@layout/content_invitation_list"
         android:id="@+id/content_invitation"
-        android:layout_height="374dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_navigation"
         android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_below="@id/toolbar_123"
         android:layout_gravity="bottom"
     />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:itemBackground="@color/white"
+        app:itemIconTint="@color/colorAccent"
+        app:itemTextColor="@color/colorAccent"
+        app:menu="@menu/bottom_navigation_main"
+        android:layout_alignParentBottom="true"
+        tools:ignore="RtlHardcoded" />
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
@@ -36,17 +50,9 @@
         app:layout_anchorGravity="center_vertical|right"
         android:layout_gravity="center_vertical|left"
         app:elevation="11dp"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:layout_alignBottom="@+id/content_invitation"
+        android:layout_alignEnd="@+id/bottom_navigation"
+        android:layout_marginBottom="63dp" />
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:itemBackground="@color/white"
-        app:itemIconTint="@color/colorAccent"
-        app:itemTextColor="@color/colorAccent"
-        app:menu="@menu/bottom_navigation_main"
-        android:layout_gravity="bottom|left"
-        tools:ignore="RtlHardcoded" />
-
-</LinearLayout>
+</RelativeLayout>

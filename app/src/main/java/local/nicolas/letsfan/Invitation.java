@@ -8,6 +8,7 @@ import com.google.firebase.database.FirebaseDatabase;
  */
 
 public class Invitation {
+    private String id;
     private Long creationTime;
     private Long dateDay;
     private Long dateMonth;
@@ -24,28 +25,31 @@ public class Invitation {
 
     static DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
     static DatabaseReference restRef = FirebaseDatabase.getInstance().getReference("restos");
+    static DatabaseReference inviRef = FirebaseDatabase.getInstance().getReference("invitations");
+
 
     private Invitation() {
     }
 
-    public Invitation(Long _creationTime, Long _dateDay, Long _dateMonth, Long _dateYear, Long _endTimeHour, Long _endTimeMinute,
-                      String _organizer, String _restaurant, Long _startTimeHour,
-                      Long _startTimeMinute, Double _tasteVariation) {
-        this.creationTime = _creationTime;
-        this.dateDay = _dateDay;
-        this.dateMonth = _dateMonth;
-        this.dateYear = _dateYear;
-        this.endTimeHour = _endTimeHour;
-        this.endTimeMinute = _endTimeMinute;
-        this.organizer = _organizer;
-        this.organizerNickName = userRef.child(organizer).child("nickName").getKey();
-        this.tasteVariation = _tasteVariation;
-        this.restaurant = _restaurant;
-        this.restaurantName = restRef.child(restaurant).child("name").getKey();
-        this.startTimeHour = _startTimeHour;
-        this.startTimeMinute = _startTimeMinute;
-
-    }
+//    public Invitation(Long _creationTime, Long _dateDay, Long _dateMonth, Long _dateYear, Long _endTimeHour, Long _endTimeMinute,
+//                      String _organizer, String _restaurant, Long _startTimeHour,
+//                      Long _startTimeMinute, Double _tasteVariation) {
+//        this.id=inviRef.getKey();
+//        this.creationTime = _creationTime;
+//        this.dateDay = _dateDay;
+//        this.dateMonth = _dateMonth;
+//        this.dateYear = _dateYear;
+//        this.endTimeHour = _endTimeHour;
+//        this.endTimeMinute = _endTimeMinute;
+//        this.organizer = _organizer;
+//        this.organizerNickName = userRef.child(organizer).child("nickName").getKey();
+//        this.tasteVariation = _tasteVariation;
+//        this.restaurant = _restaurant;
+//        this.restaurantName = restRef.child(restaurant).child("name").getKey();
+//        this.startTimeHour = _startTimeHour;
+//        this.startTimeMinute = _startTimeMinute;
+//
+//    }
 
     public Long getCreationTime() {
         return creationTime;
@@ -76,5 +80,6 @@ public class Invitation {
     public String getRestaurant(){return restaurant;}
     public String getRestaurantName(){return restaurantName;}
     public Double getTasteVariation(){return tasteVariation;}
+    public String getId(){return id;}
 
 }

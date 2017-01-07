@@ -257,6 +257,7 @@ public class CreateInvitationActivity extends AppCompatActivity {
                 return false;
             }
         } else {
+            Snackbar.make(findViewById(R.id.content_create_invitation), "End before start.", Snackbar.LENGTH_LONG).show();
             return false;
         }
 

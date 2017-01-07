@@ -3,6 +3,8 @@ package local.nicolas.letsfan;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationMenu;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -64,9 +66,12 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton fab;
     private DrawerLayout drawer;
     private NavigationView navigationView;
+    private BottomNavigationView bottomNavigation;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
-    private FirebaseRecyclerAdapter <Invitation,InvitationViewHolder> mFirebaseAdapter;
+    private FirebaseRecyclerAdapter <Invitation,InvitationViewHolder> mAllInvitationAdapter;
+    private FirebaseRecyclerAdapter <Invitation,MyInvitationViewHolder> mMyInvitationAdapter;
+    private FirebaseRecyclerAdapter <Events,MyEventViewHolder> mMyEventsAdapter;
 
     private ActionBarDrawerToggle toggle;
     private View mRootView;
@@ -84,6 +89,39 @@ public class MainActivity extends AppCompatActivity
             organizerTextView = (TextView) itemView.findViewById(R.id.invitation_organiser);
             dateTextView = (TextView) itemView.findViewById(R.id.invitation_date);
             availableSlotTextView = (TextView) itemView.findViewById(R.id.invitation_available_slot);
+            //invitationImageView = (ImageView) itemView.findViewById(R.id.invitation_image);
+        }
+    }
+
+    public static class MyInvitationViewHolder extends RecyclerView.ViewHolder {
+        public TextView restaurantTextView;
+        public TextDate dateTextView;
+        public TextTime startTextView;
+        public TextTime endTextView;
+        public ImageView invitationImageView;
+
+        public MyInvitationViewHolder(View v) {
+            super(v);
+            restaurantTextView = (TextView) itemView.findViewById(R.id.my_invitation_restaurant);
+            dateTextView = (TextDate) itemView.findViewById(R.id.my_invitation_date);
+            startTextView = (TextTime) itemView.findViewById(R.id.my_invitation_start);
+            endTextView = (TextTime) itemView.findViewById(R.id.my_invitation_end);
+
+            //invitationImageView = (ImageView) itemView.findViewById(R.id.invitation_image);
+        }
+    }
+
+    public static class MyEventViewHolder extends RecyclerView.ViewHolder {
+        public TextView organizerTextView;
+        public TextDate dateTextView;
+        public TextView RestaurantTextView;
+        public ImageView invitationImageView;
+
+        public MyEventViewHolder(View v) {
+            super(v);
+            organizerTextView = (TextView) itemView.findViewById(R.id.my_event_organiser);
+            dateTextView = (TextDate) itemView.findViewById(R.id.my_event_date);
+            RestaurantTextView = (TextView) itemView.findViewById(R.id.my_event_restaurant);
             //invitationImageView = (ImageView) itemView.findViewById(R.id.invitation_image);
         }
     }
@@ -118,14 +156,14 @@ public class MainActivity extends AppCompatActivity
         fab = (FloatingActionButton) findViewById(R.id.floatingActionButton2);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        bottomNavigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
 
         mRootView = findViewById(R.id.content_invitation);
         mRecyclerView=(RecyclerView) findViewById(R.id.recyclerView);
 
         mLinearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<Invitation, InvitationViewHolder>(
+        mAllInvitationAdapter = new FirebaseRecyclerAdapter<Invitation, InvitationViewHolder>(
                 Invitation.class,
                 R.layout.invitation_card,
                 InvitationViewHolder.class,
@@ -140,11 +178,56 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        mMyInvitationAdapter = new FirebaseRecyclerAdapter<Invitation, MyInvitationViewHolder>(
+                Invitation.class,
+                R.layout.my_invitation_card,
+                MyInvitationViewHolder.class,
+                inviRef.orderByChild("organizer").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+            @Override
+            protected void populateViewHolder(MyInvitationViewHolder viewHolder, Invitation invitation, int position) {
+                //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                viewHolder.restaurantTextView.setText(invitation.getRestaurantName());
+                viewHolder.dateTextView.setDate(invitation.getDateYear().intValue(), invitation.getDateMonth().intValue(), invitation.getDateDay().intValue());
+                viewHolder.startTextView.setTime(invitation.getStartTimeHour().intValue(), invitation.getStartTimeMinute().intValue());
+                viewHolder.endTextView.setTime(invitation.getEndTimeHour().intValue(), invitation.getEndTimeMinute().intValue());
+            }
+        };
+
+        mMyEventsAdapter = new FirebaseRecyclerAdapter<Events, MyEventViewHolder>(
+                Events.class,
+                R.layout.my_event_card,
+                MyEventViewHolder.class,
+                mFirebaseDatabase.getReference("userInEvents").child(mFirebaseAuth.getCurrentUser().getUid())) {
+            @Override
+            protected void populateViewHolder(MyEventViewHolder viewHolder, Events event, int position) {
+                //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                viewHolder.organizerTextView.setText(event.getOrganizerName());
+                viewHolder.dateTextView.setDate(event.getDateYear().intValue(), event.getDateMonth().intValue(), event.getDateDay().intValue());
+                viewHolder.RestaurantTextView.setText(event.getRestaurantName());
+
+            }
+        };
+
+        mAllInvitationAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
-                int invitationCount = mFirebaseAdapter.getItemCount();
+                int invitationCount = mAllInvitationAdapter.getItemCount();
+                int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
+                // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
+                // to the bottom of the list to show the newly added message.
+                if (lastVisiblePosition == -1 ||
+                        (positionStart >= (invitationCount - 1) && lastVisiblePosition == (positionStart - 1))) {
+                    mRecyclerView.scrollToPosition(positionStart);
+                }
+            }
+        });
+
+        mMyInvitationAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                int invitationCount = mMyInvitationAdapter.getItemCount();
                 int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
                 // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
                 // to the bottom of the list to show the newly added message.
@@ -156,7 +239,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mRecyclerView.setAdapter(mFirebaseAdapter);
+        mRecyclerView.setAdapter(mAllInvitationAdapter);
 
 
         setSupportActionBar(toolbar);
@@ -194,6 +277,24 @@ public class MainActivity extends AppCompatActivity
         };
         drawer.addDrawerListener(toggle);
         navigationView.setNavigationItemSelectedListener(this);
+        bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.action_initiate_invitation:
+                        mRecyclerView.setAdapter(mMyInvitationAdapter);
+                        break;
+                    case R.id.action_open_invitation_list:
+                        mRecyclerView.setAdapter(mAllInvitationAdapter);
+                        break;
+                    case R.id.action_manage_user_profile:
+                        mRecyclerView.setAdapter(mMyEventsAdapter);
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     @OnClick(R.id.sign_in_button)
@@ -290,17 +391,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.getMenu().clear();
         navigationView.inflateMenu(R.menu.activity_main_drawer);
 
-//
-//        if (mFirebaseAuth.getCurrentUser() == null) {
-//            MenuItem temp = navigationView.getMenu().getItem(R.id.nav_initiate_invitation);
-//            temp.setCheckable(false);
-//            navigationView.getMenu().getItem(R.id.nav_manage_user_profile).setCheckable(false);
-//            navigationView.getMenu().getItem(R.id.nav_section_sign_out).setCheckable(false);
-//        } else {
-//            navigationView.getMenu().getItem(R.id.nav_initiate_invitation).setCheckable(true);
-//            navigationView.getMenu().getItem(R.id.nav_manage_user_profile).setCheckable(true);
-//            navigationView.getMenu().getItem(R.id.nav_section_sign_out).setCheckable(true);
-//        }
         return true;
     }
 
@@ -328,13 +418,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_initiate_invitation) {
-
-
-
+            mRecyclerView.setAdapter(mMyInvitationAdapter);
         } else if (id == R.id.nav_open_invitation_list) {
-
+            mRecyclerView.setAdapter(mAllInvitationAdapter);
         } else if (id == R.id.nav_manage_user_profile) {
-
+            mRecyclerView.setAdapter(mMyEventsAdapter);
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_share) {

@@ -100,7 +100,9 @@ public class User implements Serializable {
         userInEventsRef.child(uid).child(pushID).child("dateMonth").setValue(dateMonth);
         userInEventsRef.child(uid).child(pushID).child("dateDay").setValue(dateDay);
         userInEventsRef.child(uid).child(pushID).child("organizerName").setValue(nickName);
+        userInEventsRef.child(uid).child(pushID).child("restaurantName").setValue(_restaurantName);
         userInEventsRef.child(uid).child(pushID).child("creationTime").setValue(timeStamp);
+        userInEventsRef.child(uid).child(pushID).child("id").setValue(pushID);
     }
 
 }

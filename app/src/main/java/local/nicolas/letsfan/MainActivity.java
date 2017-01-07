@@ -164,22 +164,19 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        final Data app = (Data) getApplication();
-        app.setmFirebaseDatabase(mFirebaseDatabase);
-        app.setmFirebaseAuth(mFirebaseAuth);
 
         if (mFirebaseAuth.getCurrentUser() == null) {
-            app.setUser(null);
+            currentUser = null;
         } else {
             queryDatabaseForUser(mFirebaseAuth.getCurrentUser().getUid());
-            app.setUser(currentUser);
         }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent= new Intent(MainActivity.this,CreateInvitationActivity.class);
-                startActivity(intent);
+                Intent mIntentInvitation = new Intent(MainActivity.this, CreateInvitationActivity.class);
+                mIntentInvitation.putExtra("currentUser", currentUser);
+                startActivityForResult(mIntentInvitation, RC_CREATE_INVITATION);
             }
         });
 
@@ -195,7 +192,6 @@ public class MainActivity extends AppCompatActivity
         };
         drawer.addDrawerListener(toggle);
         navigationView.setNavigationItemSelectedListener(this);
-        currentUser = app.getUser();
     }
 
     @OnClick(R.id.sign_in_button)
@@ -247,6 +243,7 @@ public class MainActivity extends AppCompatActivity
             if (resultCode == RESULT_OK) {
                 Snackbar.make(mRootView, "User is successfully registered!" , Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                currentUser = (User) data.getSerializableExtra("currentUser");
             } else {
                 Snackbar.make(mRootView, "User registration failure!" , Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -328,20 +325,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
-        // Handle navigation view item clicks here.
-        final Data app = (Data) getApplication();
         int id = item.getItemId();
 
         if (id == R.id.nav_initiate_invitation) {
-            //String localNickName = mFirebaseAuth.getCurrentUser().getDisplayName();
-            //String localEmail = mFirebaseAuth.getCurrentUser().getEmail();
-            //currentUser = new User("localNickName", "Nicolas", "YING", "localEmail", 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, true);
-            //currentUser.createUserInDatabase(mFirebaseDatabase, "Uid");
-            //currentUser.createUserInDatabase(mFirebaseDatabase, mFirebaseAuth.getCurrentUser().getUid());
-            //store currentUser
-            queryDatabaseForUser(mFirebaseAuth.getCurrentUser().getUid());
 
-            startActivityForResult(new Intent(MainActivity.this, CreateInvitationActivity.class), RC_CREATE_INVITATION);
+
 
         } else if (id == R.id.nav_open_invitation_list) {
 
@@ -354,7 +342,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_help) {
 
         } else if (id == R.id.nav_sign_out) {
-
             signOut();
             drawer.closeDrawer(GravityCompat.START);
             return true;
@@ -372,6 +359,7 @@ public class MainActivity extends AppCompatActivity
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     updateNav();
+                    Snackbar.make(mRootView, "Sign out successful.", Snackbar.LENGTH_LONG).show();
                 } else {
                     Snackbar.make(mRootView, "Sign out failed.", Snackbar.LENGTH_LONG).show();
                 }
@@ -398,7 +386,7 @@ public class MainActivity extends AppCompatActivity
                         .into(mUserAvatar);
             } else {
                 // TODO, replace with random avatar
-                Glide.with(this).load(getDrawable(R.drawable.side_nav_backg));
+
             }
 
             mNavUserMail.setText(currentUser.getEmail());

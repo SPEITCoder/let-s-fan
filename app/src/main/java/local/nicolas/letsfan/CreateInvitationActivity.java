@@ -1,5 +1,6 @@
 package local.nicolas.letsfan;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +16,8 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class CreateInvitationActivity extends AppCompatActivity {
 
@@ -38,8 +41,10 @@ public class CreateInvitationActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_123);
         setSupportActionBar(toolbar);
 
-        final Data app= (Data) getApplication();
-        currentUser = app.getUser();
+        Intent mIntent = getIntent();
+
+        currentUser = (User) mIntent.getSerializableExtra("currentUser");
+
         startTime = (TimePicker) findViewById(R.id.startTimePicker);
         endTime = (TimePicker) findViewById(R.id.endTimePicker);
         eventDate = (DatePicker) findViewById(R.id.dateInvitationPicker);
@@ -48,7 +53,7 @@ public class CreateInvitationActivity extends AppCompatActivity {
         myfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentUser.createInvitation(app.getmFirebaseDatabase(), app.getmFirebaseAuth().getCurrentUser().getUid(),
+                currentUser.createInvitation(FirebaseDatabase.getInstance(), FirebaseAuth.getInstance().getCurrentUser().getUid(),
                         startTime.getHour(), startTime.getMinute(), endTime.getHour(), endTime.getMinute(), eventDate.getYear(), eventDate.getMonth(), eventDate.getDayOfMonth(), "rid1");
                 setResult(RESULT_OK);
                 finish();

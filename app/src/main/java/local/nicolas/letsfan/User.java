@@ -3,9 +3,10 @@ package local.nicolas.letsfan;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class User {
+public class User implements Serializable {
     private String firstName;
     private String lastName;
     private String nickName;
@@ -79,16 +80,17 @@ public class User {
         // index on invitationAttendees
         DatabaseReference invAttendeeRef = db.getReference("invitationAttendees");
         invAttendeeRef.child(pushID).child(uid).child("tasteVector").setValue(tasteVector);
-        currentRef.child("startTimeHour").setValue(startTimeHour);
-        currentRef.child("startTimeMinute").setValue(startTimeMinute);
-        currentRef.child("endTimeHour").setValue(endTimeHour);
-        currentRef.child("endTimeMinute").setValue(endTimeMinute);
+        invAttendeeRef.child(pushID).child(uid).child("startTimeHour").setValue(startTimeHour);
+        invAttendeeRef.child(pushID).child(uid).child("startTimeMinute").setValue(startTimeMinute);
+        invAttendeeRef.child(pushID).child(uid).child("endTimeHour").setValue(endTimeHour);
+        invAttendeeRef.child(pushID).child(uid).child("endTimeMinute").setValue(endTimeMinute);
+        invAttendeeRef.child(pushID).child(uid).child("nickName").setValue(nickName);
 
         // index on userInEvents
         DatabaseReference userInEventsRef = db.getReference("userInEvents");
-        currentRef.child("dateYear").setValue(dateYear);
-        currentRef.child("dateMonth").setValue(dateMonth);
-        currentRef.child("dateDay").setValue(dateDay);
+        userInEventsRef.child(uid).child(pushID).child("dateYear").setValue(dateYear);
+        userInEventsRef.child(uid).child(pushID).child("dateMonth").setValue(dateMonth);
+        userInEventsRef.child(uid).child(pushID).child("dateDay").setValue(dateDay);
         userInEventsRef.child(uid).child(pushID).child("organizerName").setValue(nickName);
         userInEventsRef.child(uid).child(pushID).child("creationTime").setValue(timeStamp);
     }

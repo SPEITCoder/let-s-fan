@@ -5,6 +5,7 @@
         android:id="@+id/action_initiate_invitation"
         android:enabled="true"
         android:icon="@drawable/ic_menu_send"
+        
         android:title="@string/initiate_bottom_nav"
         app:showAsAction="ifRoom" />
     <item

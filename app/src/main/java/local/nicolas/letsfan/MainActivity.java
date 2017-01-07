@@ -176,14 +176,16 @@ public class MainActivity extends AppCompatActivity
                 viewHolder.organizerTextView.setText(invitation.getOrganizerNickName());
                 viewHolder.dateTextView.setText(mDate);
 
-                viewHolder.organizerTextView.setOnClickListener(new View.OnClickListener() {
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view){
-                        Log.w(TAG, "You clicked on "+position);
+                        Log.w(TAG, "You clicked on " + position);
                         //mFirebaseAdapter.getRef(position).removeValue();
-                        Invitation_Dialog invitation_dialog=new Invitation_Dialog();
+                        Invitation_Dialog invitation_dialog = new Invitation_Dialog();
                         Bundle mBundle = new Bundle();
-                        mBundle.putString("pushId",invitation.getId());
+                        mBundle.putString("pushId", invitation.getId());
+                        mBundle.putSerializable("currentUser", currentUser);
+                        mBundle.putSerializable("invitation", invitation);
                         invitation_dialog.setArguments(mBundle);
                         invitation_dialog.show(getFragmentManager(),"invitationDialog");
                     }

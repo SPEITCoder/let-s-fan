@@ -4,6 +4,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -60,6 +61,30 @@ public class User implements Serializable {
         userRef.child(uid).child("tasteVariation").setValue(tasteVariation);
         userRef.child(uid).child("isInfoPublic").setValue(isInfoPublic);
         userRef.child(uid).child("tasteVector").setValue(tasteVector);
+    }
+
+    public void joinInvitation (Invitation invitation) {
+        String pushID = invitation.getId();
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        // index on invitationAttendees
+        DatabaseReference invAttendeeRef = FirebaseDatabase.getInstance().getReference("invitationAttendees");
+        invAttendeeRef.child(pushID).child(uid).child("tasteVector").setValue(tasteVector);
+        // TODO get user free time
+        invAttendeeRef.child(pushID).child(uid).child("startTimeHour").setValue(invitation.getStartTimeHour());
+        invAttendeeRef.child(pushID).child(uid).child("startTimeMinute").setValue(invitation.getStartTimeMinute());
+        invAttendeeRef.child(pushID).child(uid).child("endTimeHour").setValue(invitation.getEndTimeHour());
+        invAttendeeRef.child(pushID).child(uid).child("endTimeMinute").setValue(invitation.getEndTimeMinute());
+        invAttendeeRef.child(pushID).child(uid).child("nickName").setValue(nickName);
+
+        // index on userInEvents
+        DatabaseReference userInEventsRef = FirebaseDatabase.getInstance().getReference("userInEvents");
+        userInEventsRef.child(uid).child(pushID).child("dateYear").setValue(invitation.getDateYear());
+        userInEventsRef.child(uid).child(pushID).child("dateMonth").setValue(invitation.getDateMonth());
+        userInEventsRef.child(uid).child(pushID).child("dateDay").setValue(invitation.getDateDay());
+        userInEventsRef.child(uid).child(pushID).child("organizerName").setValue(invitation.getOrganizerNickName());
+        userInEventsRef.child(uid).child(pushID).child("restaurantName").setValue(invitation.getRestaurantName());
+        userInEventsRef.child(uid).child(pushID).child("creationTime").setValue(invitation.getCreationTime());
+        userInEventsRef.child(uid).child(pushID).child("id").setValue(pushID);
     }
 
     public void createInvitation (FirebaseDatabase db, String uid, int startTimeHour, int startTimeMinute, int endTimeHour, int endTimeMinute, int dateYear, int dateMonth, int dateDay, String _restaurant, String _restaurantName) {

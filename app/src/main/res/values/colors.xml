@@ -3,6 +3,12 @@
     <color name="colorPrimary">#101f2e</color>
     <color name="colorPrimaryDark">#101f2e</color>
     <color name="colorAccent">#f7d31b</color>
+    <color name="colorAccentY">#f7d31b</color>
+    <color name="colorAccentYDark">#a78d06</color>
+    <color name="colorAccentG">#0ec585</color>
+    <color name="colorAccentGDark">#03784f</color>
+    <color name="colorAccentR">#ea4b38</color>
+    <color name="colorAccentRDark">#791c11</color>
     <color name="white">#FFFFFF</color>
     <color name="nav_tint">#CCCCCC</color>
     <color name="transparent_white">#b0ffffff</color>

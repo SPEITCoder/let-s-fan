@@ -35,11 +35,6 @@ public class Data extends Application {
         this.mFirebaseAuth=f;
     }
 
-    public int getRcSignIn()
-    {
-        return this.RC_SIGN_IN;
-    }
-
     public FirebaseDatabase getmFirebaseDatabase()
     {
         return this.mFirebaseDatabase;

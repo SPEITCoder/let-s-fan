@@ -26,11 +26,6 @@ public class User {
         tasteVector = new TasteVector(_taste_sour, _taste_sweet, _taste_bitter, _taste_spice, _taste_salty);
     }
 
-    public String Stringtest()
-    {
-        return "String test: successful!";
-    }
-
     public void createUserInDatabase (String uid) {
         userRef.child(uid).child("firstName").setValue(firstName);
         userRef.child(uid).child("lastName").setValue(lastName);
@@ -45,7 +40,7 @@ public class User {
         userRef.child(uid).child("tasteVector").child("salty").setValue(tasteVector.salty);
     }
 
-    public void createInvitation (FirebaseDatabase db, String uid, String _startTime, String _endTime, String _date, String _restaurant) {
+    public void createInvitation (FirebaseDatabase db, String uid, int startTimeHour, int startTimeMinute, int endTimeHour, int endTimeMinute, int dateYear, int dateMonth, int dateDay, String _restaurant) {
 
         // timestamp
         Long timeStamp = System.currentTimeMillis();
@@ -53,25 +48,34 @@ public class User {
         // invitation
         DatabaseReference currentRef = inviRef.push();
         String pushID = currentRef.getKey();
-        currentRef.child("date").setValue(_date);
+        currentRef.child("dateYear").setValue(dateYear);
+        currentRef.child("dateMonth").setValue(dateMonth);
+        currentRef.child("dateDay").setValue(dateDay);
+        currentRef.child("startTimeHour").setValue(startTimeHour);
+        currentRef.child("startTimeMinute").setValue(startTimeMinute);
+        currentRef.child("endTimeHour").setValue(endTimeHour);
+        currentRef.child("endTimeMinute").setValue(endTimeMinute);
         currentRef.child("organizer").setValue(uid);
-        currentRef.child("organizerNickName").setValue(userRef.child(uid).child("nickName").getKey());
+        currentRef.child("organizerNickName").setValue(nickName);
         currentRef.child("restaurant").setValue(_restaurant);
-        currentRef.child("restaurantName").setValue(restRef.child(_restaurant).child("name").getKey());
+        // TODO
+        currentRef.child("restaurantName").setValue(restRef.child(_restaurant).child("name").toString());
         currentRef.child("tasteVariation").setValue(3);
-        currentRef.child("startTime").setValue(_startTime);
-        currentRef.child("endTime").setValue(_endTime);
         currentRef.child("creationTime").setValue(timeStamp);
 
         // index on invitationAttendees
         DatabaseReference invAttendeeRef = db.getReference("invitationAttendees");
         invAttendeeRef.child(pushID).child(uid).child("tasteVector").setValue(tasteVector);
-        invAttendeeRef.child(pushID).child(uid).child("startTime").setValue(_startTime);
-        invAttendeeRef.child(pushID).child(uid).child("endTime").setValue(_endTime);
+        currentRef.child("startTimeHour").setValue(startTimeHour);
+        currentRef.child("startTimeMinute").setValue(startTimeMinute);
+        currentRef.child("endTimeHour").setValue(endTimeHour);
+        currentRef.child("endTimeMinute").setValue(endTimeMinute);
 
         // index on userInEvents
         DatabaseReference userInEventsRef = db.getReference("userInEvents");
-        userInEventsRef.child(uid).child(pushID).child("date").setValue(_date);
+        currentRef.child("dateYear").setValue(dateYear);
+        currentRef.child("dateMonth").setValue(dateMonth);
+        currentRef.child("dateDay").setValue(dateDay);
         userInEventsRef.child(uid).child(pushID).child("organizerName").setValue(nickName);
         userInEventsRef.child(uid).child(pushID).child("creationTime").setValue(timeStamp);
     }

@@ -14,31 +14,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <EditText
+        <TimePicker
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="time"
-            android:ems="10"
-            android:id="@+id/editText3"
-            android:hint="Start Time" />
+            android:id="@+id/startTimePicker" />
 
-        <EditText
+        <TimePicker
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="time"
-            android:ems="10"
-            android:id="@+id/editText4"
-            android:hint="End Time" />
-
-        <RatingBar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/ratingBar"
-            style="@style/Widget.AppCompat.RatingBar"
-            android:numStars="5"
-            android:rating="3"
-            android:stepSize="1"
-            android:isIndicator="false" />
+            android:id="@+id/endTimePicker" />
 
         <DatePicker
             android:layout_width="match_parent"

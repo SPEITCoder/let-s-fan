@@ -26,14 +26,20 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 import local.nicolas.letsfan.auth.AuthUI;
 import local.nicolas.letsfan.auth.ui.ResultCodes;
 
@@ -46,6 +52,7 @@ public class MainActivity extends AppCompatActivity
     // Google and Firebase
     private FirebaseAuth mFirebaseAuth;
     private static final int RC_SIGN_IN = 9001;
+    private static final int RC_CREATE_INVITATION = 9002;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference userRef;
     private DatabaseReference inviRef;
@@ -62,7 +69,7 @@ public class MainActivity extends AppCompatActivity
 
     private ActionBarDrawerToggle toggle;
     private View mRootView;
-    private User currentUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,14 +79,7 @@ public class MainActivity extends AppCompatActivity
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         userRef = mFirebaseDatabase.getReference("users");
         inviRef = mFirebaseDatabase.getReference("invitations");
-        if (currentUser==null)
-        {
-            if(mFirebaseAuth.getCurrentUser()!=null) {
-                String localNickName = mFirebaseAuth.getCurrentUser().getDisplayName();
-                String localEmail = mFirebaseAuth.getCurrentUser().getEmail();
-                currentUser = new User(localNickName, "Nicolas", "YING", localEmail, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, true);
-            }
-        }
+
         // UI binding
         setContentView(R.layout.activity_main);
 
@@ -102,6 +102,16 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         final Data app = (Data) getApplication();
+        app.setmFirebaseDatabase(mFirebaseDatabase);
+        app.setmFirebaseAuth(mFirebaseAuth);
+
+        if (app.getUser() == null) {
+            if(mFirebaseAuth.getCurrentUser() != null) {
+                String tmpuid = mFirebaseAuth.getCurrentUser().getUid();
+                // TODO
+                queryDatabaseForUser(tmpuid);
+            }
+        }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,8 +176,8 @@ public class MainActivity extends AppCompatActivity
                     // temporary solution
                     String localNickName = mFirebaseAuth.getCurrentUser().getDisplayName();
                     String localEmail = mFirebaseAuth.getCurrentUser().getEmail();
-                    currentUser = new User(localNickName, "Nicolas", "YING", localEmail, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, true);
-                    currentUser.createUserInDatabase(mFirebaseAuth.getCurrentUser().getUid());
+                    app.setUser(new User(localNickName, "Nicolas", "YING", localEmail, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, true));
+                    app.getUser().createUserInDatabase(mFirebaseAuth.getCurrentUser().getUid());
                 }
                 return;
             } else if (resultCode == RESULT_CANCELED) {
@@ -178,6 +188,14 @@ public class MainActivity extends AppCompatActivity
                 return;
             } else {
                 Snackbar.make(mRootView, "Unknown response.", Snackbar.LENGTH_LONG).show();
+            }
+        } else if (requestCode == RC_CREATE_INVITATION) {
+            if (resultCode == RESULT_OK) {
+                Snackbar.make(mRootView, "Invitation is added!" , Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            } else {
+                Snackbar.make(mRootView, "Invitation creation failed!" , Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         }
     }
@@ -213,7 +231,7 @@ public class MainActivity extends AppCompatActivity
         // Bind UI
         mNavUserName = (TextView) findViewById(R.id.nav_head_user_name);
         mNavUserMail = (TextView) findViewById(R.id.nav_header_user_mail);
-        mUserAvatar = (ImageView) findViewById(R.id.userAvatar);
+        mUserAvatar = (CircleImageView) findViewById(R.id.userAvatar);
         mNavSignInButton = (Button) findViewById(R.id.sign_in_button);
 
         return true;
@@ -271,10 +289,9 @@ public class MainActivity extends AppCompatActivity
             //currentUser.createUserInDatabase(mFirebaseDatabase, "Uid");
             //currentUser.createUserInDatabase(mFirebaseDatabase, mFirebaseAuth.getCurrentUser().getUid());
             //store currentUser
-            app.setUser(currentUser);
-            app.setmFirebaseDatabase(mFirebaseDatabase);
-            app.setmFirebaseAuth(mFirebaseAuth);
-            startActivity(new Intent(MainActivity.this, CreateInvitationActivity.class));
+            queryDatabaseForUser(mFirebaseAuth.getCurrentUser().getUid());
+
+            startActivityForResult(new Intent(MainActivity.this, CreateInvitationActivity.class), RC_CREATE_INVITATION);
 
         } else if (id == R.id.nav_open_invitation_list) {
 
@@ -360,5 +377,22 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    private void queryDatabaseForUser (String uid) {
+        ValueEventListener userListener = new ValueEventListener() {
+            @Override
+            public void onDataChange (DataSnapshot dataSnapshot) {
+                User tmp = dataSnapshot.getValue(User.class);
+//                app.setUser(dataSnapshot.getValue(User.class));
+            }
+            @Override
+            public void onCancelled (DatabaseError error) {
+                Log.d(TAG, "queryDatabaseforUser.onCancelled: error");
+            }
+
+        };
+
+        userRef.equalTo(uid).addListenerForSingleValueEvent(userListener);
     }
 }

@@ -76,10 +76,6 @@ public class MainActivity extends AppCompatActivity
         public void onDataChange (DataSnapshot dataSnapshot) {
             if (dataSnapshot.hasChildren()) {
                 currentUser = dataSnapshot.getValue(User.class);
-            } else {
-                // prompt to create new user
-                Log.d(TAG, "userListener onDataChange: Create user in database.");
-                startActivityForResult(new Intent(MainActivity.this, RegisterUserActivity.class), RC_CREATE_USER);
             }
         }
         @Override
@@ -132,9 +128,14 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mIntentInvitation = new Intent(MainActivity.this, CreateInvitationActivity.class);
-                mIntentInvitation.putExtra("currentUser", currentUser);
-                startActivityForResult(mIntentInvitation, RC_CREATE_INVITATION);
+                if (currentUser == null) {
+                    startActivityForResult(new Intent(MainActivity.this, RegisterUserActivity.class), RC_CREATE_USER);
+                    Snackbar.make(mRootView, "Finish up registration first.", Snackbar.LENGTH_LONG).show();
+                } else {
+                    Intent mIntentInvitation = new Intent(MainActivity.this, CreateInvitationActivity.class);
+                    mIntentInvitation.putExtra("currentUser", currentUser);
+                    startActivityForResult(mIntentInvitation, RC_CREATE_INVITATION);
+                }
             }
         });
 
@@ -177,8 +178,6 @@ public class MainActivity extends AppCompatActivity
             if (resultCode == RESULT_OK) {
                 updateNav();
                 Snackbar.make(mRootView, "Signed in successfully.", Snackbar.LENGTH_LONG).show();
-                Query currentUserQuery = userRef.equalTo(mFirebaseAuth.getCurrentUser().getUid());
-                currentUserQuery.addListenerForSingleValueEvent(userListener);
                 return;
             } else if (resultCode == RESULT_CANCELED) {
                 Snackbar.make(mRootView, "Signed in cancelled.", Snackbar.LENGTH_LONG).show();
@@ -336,6 +335,9 @@ public class MainActivity extends AppCompatActivity
         mUserAvatar = (CircleImageView) findViewById(R.id.userAvatar);
         mNavSignInButton = (Button) findViewById(R.id.sign_in_button);
 
+        if (currentUser == null && mFirebaseAuth.getCurrentUser() != null) {
+            startActivityForResult(new Intent(MainActivity.this, RegisterUserActivity.class), RC_CREATE_USER);
+        }
         if(currentUser != null && mFirebaseAuth.getCurrentUser() != null) {
             if (mFirebaseAuth.getCurrentUser().getPhotoUrl() != null) {
                 Glide.with(this)

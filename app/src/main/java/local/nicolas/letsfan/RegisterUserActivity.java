@@ -53,6 +53,8 @@ public class RegisterUserActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_UserRg);
         toolbar.setTitle("Finish registering...");
 
+        String displayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        nickName.setText(displayName);
         
         fabFinish.setOnClickListener(new View.OnClickListener() {
             @Override

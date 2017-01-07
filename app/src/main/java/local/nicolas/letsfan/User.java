@@ -1,10 +1,15 @@
 package local.nicolas.letsfan;
 
+import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 public class User implements Serializable {
     private String firstName;
@@ -37,6 +42,7 @@ public class User implements Serializable {
         email = _email;
         tasteVariation = _taste_variation;
         isInfoPublic = _is_public;
+        tasteVector = new ArrayMap<>();
         tasteVector.put("sour", _taste_sour);
         tasteVector.put("sweet", _taste_sweet);
         tasteVector.put("spice", _taste_spice);

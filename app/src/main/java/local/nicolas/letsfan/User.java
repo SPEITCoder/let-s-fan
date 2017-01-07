@@ -62,7 +62,7 @@ public class User implements Serializable {
         userRef.child(uid).child("tasteVector").setValue(tasteVector);
     }
 
-    public void createInvitation (FirebaseDatabase db, String uid, int startTimeHour, int startTimeMinute, int endTimeHour, int endTimeMinute, int dateYear, int dateMonth, int dateDay, String _restaurant) {
+    public void createInvitation (FirebaseDatabase db, String uid, int startTimeHour, int startTimeMinute, int endTimeHour, int endTimeMinute, int dateYear, int dateMonth, int dateDay, String _restaurant, String _restaurantName) {
 
         // timestamp
         Long timeStamp = System.currentTimeMillis();
@@ -80,8 +80,7 @@ public class User implements Serializable {
         currentRef.child("organizer").setValue(uid);
         currentRef.child("organizerNickName").setValue(nickName);
         currentRef.child("restaurant").setValue(_restaurant);
-        // TODO, replace resaurantName
-        currentRef.child("restaurantName").setValue(restRef.child(_restaurant).child("name").toString());
+        currentRef.child("restaurantName").setValue(_restaurantName);
         currentRef.child("tasteVariation").setValue(3);
         currentRef.child("creationTime").setValue(timeStamp);
         currentRef.child("id").setValue(pushID);

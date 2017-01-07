@@ -13,21 +13,33 @@ import android.provider.CalendarContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class CreateInvitationActivity extends AppCompatActivity {
 
@@ -36,12 +48,17 @@ public class CreateInvitationActivity extends AppCompatActivity {
     private TextTime startTime;
     private TextTime endTime;
     private TextDate eventDate;
+    private SeekBar tasteVariation;
+    private Spinner restaurantSelector;
 
+    final List<String> restos = new ArrayList<>();
+    final List<String> restoID = new ArrayList<>();
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+
 
 
     @Override
@@ -57,6 +74,8 @@ public class CreateInvitationActivity extends AppCompatActivity {
         startTime = (TextTime) findViewById(R.id.start_time_text);
         endTime = (TextTime) findViewById(R.id.end_time_text);
         eventDate = (TextDate) findViewById(R.id.event_date_text);
+        tasteVariation = (SeekBar) findViewById(R.id.seekBar_tasteAdv);
+        restaurantSelector = (Spinner) findViewById(R.id.restaurant_slector);
 
         TimeZone mTimeZone = Calendar.getInstance().getTimeZone();
         Date mDate = Calendar.getInstance(mTimeZone).getTime();
@@ -65,6 +84,30 @@ public class CreateInvitationActivity extends AppCompatActivity {
         mDate.setTime(Calendar.getInstance().getTimeInMillis() + 3600000);
         endTime.setTime(mDate.getHours(), mDate.getMinutes());
 
+        FirebaseDatabase.getInstance().getReference("restos").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Is better to use a List, because you don't know the size
+                // of the iterator returned by dataSnapshot.getChildren() to
+                // initialize the array
+                restoID.clear();
+                restos.clear();
+                for (DataSnapshot restSnapshot: dataSnapshot.getChildren()) {
+                    restos.add(restSnapshot.child("name").getValue(String.class));
+                    restoID.add(restSnapshot.getKey());
+                }
+
+                restaurantSelector = (Spinner) findViewById(R.id.restaurant_slector);
+                ArrayAdapter<String> restosAdapter = new ArrayAdapter<>(CreateInvitationActivity.this, android.R.layout.simple_spinner_item, restos);
+                restosAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                restaurantSelector.setAdapter(restosAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         FloatingActionButton myfab = (FloatingActionButton) findViewById(R.id.fabFinishCreatingInvitation);
         myfab.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +115,7 @@ public class CreateInvitationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (vadilateInput()) {
                     currentUser.createInvitation(FirebaseDatabase.getInstance(), FirebaseAuth.getInstance().getCurrentUser().getUid(),
-                            startTime.getHour(), startTime.getMinute(), endTime.getHour(), endTime.getMinute(), eventDate.getYear(), eventDate.getMonth(), eventDate.getDayOfMonth(), "rid1");
+                            startTime.getHour(), startTime.getMinute(), endTime.getHour(), endTime.getMinute(), eventDate.getYear(), eventDate.getMonth(), eventDate.getDayOfMonth(), restoID.get(restaurantSelector.getSelectedItemPosition()), restos.get(restaurantSelector.getSelectedItemPosition()));
                     setResult(RESULT_OK);
                     finish();
                 }
@@ -180,18 +223,42 @@ public class CreateInvitationActivity extends AppCompatActivity {
         TimeZone mTimeZone = Calendar.getInstance().getTimeZone();
         Date mDate = Calendar.getInstance(mTimeZone).getTime();
 
-        if (eventDate.getYear() < mDate.getYear() + 1900 || eventDate.getMonth() < mDate.getMonth() + 1 || eventDate.getDayOfMonth() < mDate.getDate()) {
-            Snackbar.make(findViewById(R.id.content_create_invitation), "Date is invalid", Snackbar.LENGTH_LONG);
-
+        if (eventDate.getYear() < mDate.getYear() + 1900) {
+            Snackbar.make(findViewById(R.id.content_create_invitation), "Year is invalid", Snackbar.LENGTH_LONG);
             return false;
-        } else if (startTime.getHour() < mDate.getHours() || startTime.getMinute() < mDate.getMinutes()) {
-            Snackbar.make(findViewById(R.id.content_create_invitation), "Start time is in the past.", Snackbar.LENGTH_LONG).show();
-            return false;
-        } else if (endTime.getHour() < startTime.getHour() || endTime.getMinute() < startTime.getMinute()) {
-            Snackbar.make(findViewById(R.id.content_create_invitation), "End time is before start time.", Snackbar.LENGTH_LONG).show();
-            return false;
-        } else {
-            return true;
+        } else if (eventDate.getYear() == mDate.getYear() + 1900) {
+            if (eventDate.getMonth() < mDate.getMonth() + 1) {
+                Snackbar.make(findViewById(R.id.content_create_invitation), "Month is invalid", Snackbar.LENGTH_LONG);
+                return false;
+            } else if (eventDate.getMonth() == mDate.getMonth() + 1) {
+                if (eventDate.getDayOfMonth() < mDate.getDate()) {
+                    Snackbar.make(findViewById(R.id.content_create_invitation), "Date is invalid", Snackbar.LENGTH_LONG);
+                    return false;
+                } else if (eventDate.getDayOfMonth() == mDate.getDate()) {
+                    if (startTime.getHour() < mDate.getHours()) {
+                        Snackbar.make(findViewById(R.id.content_create_invitation), "Start hour is in the past.", Snackbar.LENGTH_LONG).show();
+                        return false;
+                    } else if (startTime.getHour() == mDate.getHours()) {
+                        if (startTime.getMinute() < mDate.getMinutes()) {
+                            Snackbar.make(findViewById(R.id.content_create_invitation), "Start minute is in the past.", Snackbar.LENGTH_LONG).show();
+                            return false;
+                        }
+                    }
+                }
+            }
         }
+        if (startTime.getHour() < endTime.getHour()) {
+            return true;
+        } else if (startTime.getHour() == endTime.getHour()) {
+            if (startTime.getMinute() < endTime.getMinute()) {
+                return true;
+            } else {
+                Snackbar.make(findViewById(R.id.content_create_invitation), "End before start.", Snackbar.LENGTH_LONG).show();
+                return false;
+            }
+        } else {
+            return false;
+        }
+
     }
 }

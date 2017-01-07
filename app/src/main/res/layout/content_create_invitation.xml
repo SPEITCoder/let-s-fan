@@ -95,18 +95,33 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
+            android:paddingTop="20dp"
             android:text="Taste Adventure Degree"
             android:layout_weight="1" />
 
         <SeekBar
-        android:id="@+id/seekBar_tasteVariation"
+        android:id="@+id/seekBar_tasteAdv"
         style="@android:style/Widget.Material.SeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:max="4"
         android:progress="1"
             android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:text="Restaurant"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/restaurant_slector"
+            android:layout_weight="1"
+            android:spinnerMode="dialog" />
 
 
     </LinearLayout>

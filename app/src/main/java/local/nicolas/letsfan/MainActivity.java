@@ -353,6 +353,7 @@ public class MainActivity extends AppCompatActivity
 
     @OnClick(R.id.nav_sign_out)
     public void signOut() {
+        currentUser = null;
         AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -364,6 +365,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+        updateNav();
     }
 
     @Override
@@ -378,7 +380,8 @@ public class MainActivity extends AppCompatActivity
         mNavSignInButton = (Button) findViewById(R.id.sign_in_button);
 
         if (currentUser == null && mFirebaseAuth.getCurrentUser() != null) {
-            startActivityForResult(new Intent(MainActivity.this, RegisterUserActivity.class), RC_CREATE_USER);
+//            startActivityForResult(new Intent(MainActivity.this, RegisterUserActivity.class), RC_CREATE_USER);
+            queryDatabaseForUser(mFirebaseAuth.getCurrentUser().getUid());
         }
         if(currentUser != null && mFirebaseAuth.getCurrentUser() != null) {
             if (mFirebaseAuth.getCurrentUser().getPhotoUrl() != null) {
@@ -434,7 +437,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void queryDatabaseForUser (String uid) {
-
         userRef.child(uid).addListenerForSingleValueEvent(userListener);
     }
 }

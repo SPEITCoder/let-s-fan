@@ -1,12 +1,20 @@
 package local.nicolas.letsfan;
 
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.DialogFragment;
+import android.app.FragmentManager;
+import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.icu.util.Calendar;
+import android.icu.util.TimeZone;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -19,13 +27,15 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Date;
+
 public class CreateInvitationActivity extends AppCompatActivity {
 
 
-    private User currentUser;        ;
-    private TimePicker startTime;
-    private TimePicker endTime;
-    private DatePicker eventDate;
+    private User currentUser;
+    private TextTime startTime;
+    private TextTime endTime;
+    private TextDate eventDate;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -44,26 +54,88 @@ public class CreateInvitationActivity extends AppCompatActivity {
         Intent mIntent = getIntent();
 
         currentUser = (User) mIntent.getSerializableExtra("currentUser");
+        startTime = (TextTime) findViewById(R.id.start_time_text);
+        endTime = (TextTime) findViewById(R.id.end_time_text);
+        eventDate = (TextDate) findViewById(R.id.event_date_text);
 
-        startTime = (TimePicker) findViewById(R.id.startTimePicker);
-        endTime = (TimePicker) findViewById(R.id.endTimePicker);
-        eventDate = (DatePicker) findViewById(R.id.dateInvitationPicker);
+        TimeZone mTimeZone = Calendar.getInstance().getTimeZone();
+        Date mDate = Calendar.getInstance(mTimeZone).getTime();
+        eventDate.setDate(mDate);
+        startTime.setTime(mDate.getHours(), mDate.getMinutes());
+        mDate.setTime(Calendar.getInstance().getTimeInMillis() + 3600000);
+        endTime.setTime(mDate.getHours(), mDate.getMinutes());
+
 
         FloatingActionButton myfab = (FloatingActionButton) findViewById(R.id.fabFinishCreatingInvitation);
         myfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentUser.createInvitation(FirebaseDatabase.getInstance(), FirebaseAuth.getInstance().getCurrentUser().getUid(),
-                        startTime.getHour(), startTime.getMinute(), endTime.getHour(), endTime.getMinute(), eventDate.getYear(), eventDate.getMonth(), eventDate.getDayOfMonth(), "rid1");
-                setResult(RESULT_OK);
-                finish();
+                if (vadilateInput()) {
+                    currentUser.createInvitation(FirebaseDatabase.getInstance(), FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                            startTime.getHour(), startTime.getMinute(), endTime.getHour(), endTime.getMinute(), eventDate.getYear(), eventDate.getMonth(), eventDate.getDayOfMonth(), "rid1");
+                    setResult(RESULT_OK);
+                    finish();
+                }
             }
         });
+
+
+
+        startTime.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    DialogFragment mTime = new TimePickerDialogFragment();
+                    Bundle mBundle = new Bundle();
+                    mBundle.putInt("hour", startTime.getHour());
+                    mBundle.putInt("minute", startTime.getMinute());
+                    mBundle.putInt("id", R.id.start_time_text);
+                    mTime.setArguments(mBundle);
+                    mTime.show(getSupportFragmentManager(), "timePicker");
+                }
+                return true;
+            }
+        });
+
+        endTime.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    DialogFragment mTime = new TimePickerDialogFragment();
+                    Bundle mBundle = new Bundle();
+                    mBundle.putInt("hour", endTime.getHour());
+                    mBundle.putInt("minute", endTime.getMinute());
+                    mBundle.putInt("id", R.id.end_time_text);
+                    mTime.setArguments(mBundle);
+                    mTime.show(getSupportFragmentManager(), "timePicker");
+                }
+                return true;
+            }
+        });
+
+        eventDate.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    DialogFragment mDate = new DatePickerDialogFragment();
+                    Bundle mBundle = new Bundle();
+                    mBundle.putInt("year", eventDate.getYear());
+                    mBundle.putInt("month", eventDate.getMonth());
+                    mBundle.putInt("date", eventDate.getDayOfMonth());
+                    mBundle.putInt("id", R.id.event_date_text);
+                    mDate.setArguments(mBundle);
+                    mDate.show(getSupportFragmentManager(), "DatePicker");
+                }
+                return true;
+            }
+        });
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
     }
 
     /**
@@ -101,5 +173,25 @@ public class CreateInvitationActivity extends AppCompatActivity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
+    }
+
+    public Boolean vadilateInput () {
+        // Date check
+        TimeZone mTimeZone = Calendar.getInstance().getTimeZone();
+        Date mDate = Calendar.getInstance(mTimeZone).getTime();
+
+        if (eventDate.getYear() < mDate.getYear() + 1900 || eventDate.getMonth() < mDate.getMonth() + 1 || eventDate.getDayOfMonth() < mDate.getDate()) {
+            Snackbar.make(findViewById(R.id.content_create_invitation), "Date is invalid", Snackbar.LENGTH_LONG);
+
+            return false;
+        } else if (startTime.getHour() < mDate.getHours() || startTime.getMinute() < mDate.getMinutes()) {
+            Snackbar.make(findViewById(R.id.content_create_invitation), "Start time is in the past.", Snackbar.LENGTH_LONG).show();
+            return false;
+        } else if (endTime.getHour() < startTime.getHour() || endTime.getMinute() < startTime.getMinute()) {
+            Snackbar.make(findViewById(R.id.content_create_invitation), "End time is before start time.", Snackbar.LENGTH_LONG).show();
+            return false;
+        } else {
+            return true;
+        }
     }
 }

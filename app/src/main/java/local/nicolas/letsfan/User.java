@@ -84,6 +84,7 @@ public class User implements Serializable {
         currentRef.child("restaurantName").setValue(restRef.child(_restaurant).child("name").toString());
         currentRef.child("tasteVariation").setValue(3);
         currentRef.child("creationTime").setValue(timeStamp);
+        currentRef.child("id").setValue(pushID);
 
         // index on invitationAttendees
         DatabaseReference invAttendeeRef = db.getReference("invitationAttendees");

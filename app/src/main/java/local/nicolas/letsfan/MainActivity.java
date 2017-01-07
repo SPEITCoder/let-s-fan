@@ -170,11 +170,24 @@ public class MainActivity extends AppCompatActivity
                 InvitationViewHolder.class,
                 inviRef) {
             @Override
-            protected void populateViewHolder(InvitationViewHolder viewHolder, Invitation invitation, int position) {
+            protected void populateViewHolder(InvitationViewHolder viewHolder, final Invitation invitation, final int position) {
                 //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                String mDate=invitation.getDateMonth().toString()+"."+invitation.getDateDay();
+                String mDate=invitation.getDateMonth().toString()+"月"+invitation.getDateDay()+"日";
                 viewHolder.organizerTextView.setText(invitation.getOrganizerNickName());
                 viewHolder.dateTextView.setText(mDate);
+
+                viewHolder.organizerTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view){
+                        Log.w(TAG, "You clicked on "+position);
+                        //mFirebaseAdapter.getRef(position).removeValue();
+                        Invitation_Dialog invitation_dialog=new Invitation_Dialog();
+                        Bundle mBundle = new Bundle();
+                        mBundle.putString("pushId",invitation.getId());
+                        invitation_dialog.setArguments(mBundle);
+                        invitation_dialog.show(getFragmentManager(),"invitationDialog");
+                    }
+                });
 
             }
         };
@@ -200,6 +213,7 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
         toolbar.setTitle("Join Let's fan Invitations");
+
 
         if (mFirebaseAuth.getCurrentUser() == null) {
             currentUser = null;
@@ -544,6 +558,41 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+//    public static class AlertDialogFragment extends DialogFragment{
+//        public static AlertDialogFragment newInstance(){
+//            AlertDialogFragment newInstance = new AlertDialogFragment();
+//            return newInstance;
+//        }
+//        Context mContext = getApplicationContext();
+//        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+//        View layout = inflater.inflate(R.layout.invitation_dialog,
+//                (ViewGroup) findViewById(R.id.dialog));
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState){
+//            AlertDialog.Builder alertDialog=new AlertDialog.Builder(getActivity());
+//            alertDialog.setTitle("Alert Dialog");
+//            alertDialog.setMessage("You have been alerted");
+//
+//
+//            //LayoutInflater inflater = getLayoutInflater();
+//
+//            alertDialog.setView(layout);
+//            alertDialog.setPositiveButton(android.R.string.ok,
+//                    new DialogInterface.OnClickListener(){                        @Override
+//                        public void onClick(DialogInterface dialog, int which){
+//                            Toast.makeText(getActivity(),"Clicked OK!", Toast.LENGTH_SHORT).show();
+//                            return;
+//                        }
+//                    });
+//            return alertDialog.create();
+//        }
+//    }
+//
+//    void showDialogFragment(DialogFragment newFragment){
+//        //FragmentManager fragmentManager = newFragment.getFragmentManager();
+//        newFragment.show(getFragmentManager(),null);
+//    }
+
 
 
     @Override
@@ -554,4 +603,8 @@ public class MainActivity extends AppCompatActivity
     private void queryDatabaseForUser (String uid) {
         userRef.child(uid).addListenerForSingleValueEvent(userListener);
     }
+
+
+
+
 }

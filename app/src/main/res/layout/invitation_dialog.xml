@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content" android:layout_width="wrap_content"
+    android:background="#ffffffff" android:orientation="horizontal"
+    android:id="@+id/dialog">
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/invitation_dialog_item"
+        android:id="@+id/invitation_dialog_recyclerView">
+
+
+    </android.support.v7.widget.RecyclerView>
+
+
+</LinearLayout>

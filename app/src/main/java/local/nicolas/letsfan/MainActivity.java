@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,9 +30,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -66,10 +65,28 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     private NavigationView navigationView;
     private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLinearLayoutManager;
+    private FirebaseRecyclerAdapter <Invitation,InvitationViewHolder> mFirebaseAdapter;
 
     private ActionBarDrawerToggle toggle;
     private View mRootView;
     private User currentUser;
+
+    //viewholder
+    public static class InvitationViewHolder extends RecyclerView.ViewHolder {
+        public TextView organizerTextView;
+        public TextView dateTextView;
+        public TextView availableSlotTextView;
+        public ImageView invitationImageView;
+
+        public InvitationViewHolder(View v) {
+            super(v);
+            organizerTextView = (TextView) itemView.findViewById(R.id.invitation_organiser);
+            dateTextView = (TextView) itemView.findViewById(R.id.invitation_date);
+            availableSlotTextView = (TextView) itemView.findViewById(R.id.invitation_available_slot);
+            //invitationImageView = (ImageView) itemView.findViewById(R.id.invitation_image);
+        }
+    }
 
     private ValueEventListener userListener = new ValueEventListener() {
         @Override
@@ -105,16 +122,41 @@ public class MainActivity extends AppCompatActivity
         mRootView = findViewById(R.id.content_invitation);
         mRecyclerView=(RecyclerView) findViewById(R.id.recyclerView);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        String[] dataset = new String[100];
-        for (int i = 0; i < dataset.length; i++) {
-            dataset[i] = "item" + i;
-        }
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<Invitation, InvitationViewHolder>(
+                Invitation.class,
+                R.layout.invitation_card,
+                InvitationViewHolder.class,
+                inviRef) {
+            @Override
+            protected void populateViewHolder(InvitationViewHolder viewHolder, Invitation invitation, int position) {
+                //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                viewHolder.organizerTextView.setText(invitation.getOrganizer());
+                //viewHolder.organizerTextView.setText("test");
+                viewHolder.dateTextView.setText(invitation.getDateDay().toString());
+            }
+        };
 
-        RecyclerAdapter mAdapter = new RecyclerAdapter(dataset);
-        mRecyclerView.setAdapter(mAdapter);
+        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                int invitationCount = mFirebaseAdapter.getItemCount();
+                int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
+                // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
+                // to the bottom of the list to show the newly added message.
+                if (lastVisiblePosition == -1 ||
+                        (positionStart >= (invitationCount - 1) && lastVisiblePosition == (positionStart - 1))) {
+                    mRecyclerView.scrollToPosition(positionStart);
+                }
+            }
+        });
+
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mRecyclerView.setAdapter(mFirebaseAdapter);
+
 
         setSupportActionBar(toolbar);
 

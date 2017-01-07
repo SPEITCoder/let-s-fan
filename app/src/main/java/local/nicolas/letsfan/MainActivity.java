@@ -137,9 +137,10 @@ public class MainActivity extends AppCompatActivity
             @Override
             protected void populateViewHolder(InvitationViewHolder viewHolder, Invitation invitation, int position) {
                 //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                viewHolder.organizerTextView.setText(invitation.getOrganizer());
-                //viewHolder.organizerTextView.setText("test");
-                viewHolder.dateTextView.setText(invitation.getDateDay().toString());
+                String mDate=invitation.getDateMonth().toString()+"."+invitation.getDateDay();
+                viewHolder.organizerTextView.setText(invitation.getOrganizerNickName());
+                viewHolder.dateTextView.setText(mDate);
+
             }
         };
 

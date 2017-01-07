@@ -11,40 +11,55 @@
     android:padding="10px"
     android:layout_margin="10px">
 
-    <GridLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="40px"
-            android:layout_height="40px"
-            android:id="@+id/imageView"
-            app:srcCompat="@drawable/side_nav_backg" />
-
-        <TextView
-            android:text="Restaurant"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/my_event_restaurant"
-            android:layout_weight="1"
-            android:fontFamily="sans-serif" />
+            android:layout_height="match_parent">
 
-        <TextView
-            android:text="Organizer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/my_event_organiser"
-            android:layout_weight="1"
-            android:fontFamily="sans-serif" />
+            <ImageView
+                android:layout_width="100px"
+                android:layout_height="100px"
+                android:id="@+id/imageView"
+                app:srcCompat="@drawable/side_nav_backg"
+                android:layout_weight="1" />
 
-        <local.nicolas.letsfan.TextDate
-            android:fontFamily="sans-serif-thin"
-            android:id="@+id/my_event_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="48sp"
-            android:layout_weight="1" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
-    </GridLayout>
+                <local.nicolas.letsfan.TextDate
+                    android:fontFamily="sans-serif"
+                    android:id="@+id/my_event_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:text="Organizer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/my_event_organiser"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif" />
+
+                <TextView
+                    android:text="Restaurant"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/my_event_restaurant"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>

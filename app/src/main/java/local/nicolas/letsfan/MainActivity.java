@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity
         public void onDataChange (DataSnapshot dataSnapshot) {
             if (dataSnapshot.hasChildren()) {
                 currentUser = dataSnapshot.getValue(User.class);
+                updateNav();
             }
         }
         @Override
@@ -178,36 +179,6 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        mMyInvitationAdapter = new FirebaseRecyclerAdapter<Invitation, MyInvitationViewHolder>(
-                Invitation.class,
-                R.layout.my_invitation_card,
-                MyInvitationViewHolder.class,
-                inviRef.orderByChild("organizer").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-            @Override
-            protected void populateViewHolder(MyInvitationViewHolder viewHolder, Invitation invitation, int position) {
-                //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                viewHolder.restaurantTextView.setText(invitation.getRestaurantName());
-                viewHolder.dateTextView.setDate(invitation.getDateYear().intValue(), invitation.getDateMonth().intValue(), invitation.getDateDay().intValue());
-                viewHolder.startTextView.setTime(invitation.getStartTimeHour().intValue(), invitation.getStartTimeMinute().intValue());
-                viewHolder.endTextView.setTime(invitation.getEndTimeHour().intValue(), invitation.getEndTimeMinute().intValue());
-            }
-        };
-
-        mMyEventsAdapter = new FirebaseRecyclerAdapter<Events, MyEventViewHolder>(
-                Events.class,
-                R.layout.my_event_card,
-                MyEventViewHolder.class,
-                mFirebaseDatabase.getReference("userInEvents").child(mFirebaseAuth.getCurrentUser().getUid())) {
-            @Override
-            protected void populateViewHolder(MyEventViewHolder viewHolder, Events event, int position) {
-                //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                viewHolder.organizerTextView.setText(event.getOrganizerName());
-                viewHolder.dateTextView.setDate(event.getDateYear().intValue(), event.getDateMonth().intValue(), event.getDateDay().intValue());
-                viewHolder.RestaurantTextView.setText(event.getRestaurantName());
-
-            }
-        };
-
         mAllInvitationAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
@@ -223,27 +194,12 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        mMyInvitationAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                int invitationCount = mMyInvitationAdapter.getItemCount();
-                int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
-                // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
-                // to the bottom of the list to show the newly added message.
-                if (lastVisiblePosition == -1 ||
-                        (positionStart >= (invitationCount - 1) && lastVisiblePosition == (positionStart - 1))) {
-                    mRecyclerView.scrollToPosition(positionStart);
-                }
-            }
-        });
 
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setAdapter(mAllInvitationAdapter);
 
-
         setSupportActionBar(toolbar);
-
+        toolbar.setTitle("Join Let's fan Invitations");
 
         if (mFirebaseAuth.getCurrentUser() == null) {
             currentUser = null;
@@ -284,12 +240,15 @@ public class MainActivity extends AppCompatActivity
                 switch (id) {
                     case R.id.action_initiate_invitation:
                         mRecyclerView.setAdapter(mMyInvitationAdapter);
+                        toolbar.setTitle("Invitations issued by me");
                         break;
                     case R.id.action_open_invitation_list:
                         mRecyclerView.setAdapter(mAllInvitationAdapter);
+                        toolbar.setTitle("Join Let's fan Invitations");
                         break;
                     case R.id.action_manage_user_profile:
                         mRecyclerView.setAdapter(mMyEventsAdapter);
+                        toolbar.setTitle("My Let's fan Meetings");
                         break;
                 }
                 return false;
@@ -419,10 +378,13 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_initiate_invitation) {
             mRecyclerView.setAdapter(mMyInvitationAdapter);
+            toolbar.setTitle("Invitations issued by me");
         } else if (id == R.id.nav_open_invitation_list) {
             mRecyclerView.setAdapter(mAllInvitationAdapter);
+            toolbar.setTitle("Join Let's fan Invitations");
         } else if (id == R.id.nav_manage_user_profile) {
             mRecyclerView.setAdapter(mMyEventsAdapter);
+            toolbar.setTitle("My Let's fan Meetings");
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_share) {
@@ -443,6 +405,8 @@ public class MainActivity extends AppCompatActivity
     @OnClick(R.id.nav_sign_out)
     public void signOut() {
         currentUser = null;
+        mRecyclerView.setAdapter(mAllInvitationAdapter);
+        toolbar.setTitle("Sign in to Let's fan");
         AuthUI.getInstance().signOut(this).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -473,6 +437,68 @@ public class MainActivity extends AppCompatActivity
             queryDatabaseForUser(mFirebaseAuth.getCurrentUser().getUid());
         }
         if(currentUser != null && mFirebaseAuth.getCurrentUser() != null) {
+
+            mMyInvitationAdapter = new FirebaseRecyclerAdapter<Invitation, MyInvitationViewHolder>(
+                    Invitation.class,
+                    R.layout.my_invitation_card,
+                    MyInvitationViewHolder.class,
+                    inviRef.orderByChild("organizer").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                @Override
+                protected void populateViewHolder(MyInvitationViewHolder viewHolder, Invitation invitation, int position) {
+                    //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                    viewHolder.restaurantTextView.setText(invitation.getRestaurantName());
+                    viewHolder.dateTextView.setDate(invitation.getDateYear().intValue(), invitation.getDateMonth().intValue(), invitation.getDateDay().intValue());
+                    viewHolder.startTextView.setTime(invitation.getStartTimeHour().intValue(), invitation.getStartTimeMinute().intValue());
+                    viewHolder.endTextView.setTime(invitation.getEndTimeHour().intValue(), invitation.getEndTimeMinute().intValue());
+                }
+            };
+
+            mMyEventsAdapter = new FirebaseRecyclerAdapter<Events, MyEventViewHolder>(
+                    Events.class,
+                    R.layout.my_event_card,
+                    MyEventViewHolder.class,
+                    mFirebaseDatabase.getReference("userInEvents").child(mFirebaseAuth.getCurrentUser().getUid())) {
+                @Override
+                protected void populateViewHolder(MyEventViewHolder viewHolder, Events event, int position) {
+                    //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                    viewHolder.organizerTextView.setText(event.getOrganizerName());
+                    viewHolder.dateTextView.setDate(event.getDateYear().intValue(), event.getDateMonth().intValue(), event.getDateDay().intValue());
+                    viewHolder.RestaurantTextView.setText(event.getRestaurantName());
+
+                }
+            };
+
+
+            mMyInvitationAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                @Override
+                public void onItemRangeInserted(int positionStart, int itemCount) {
+                    super.onItemRangeInserted(positionStart, itemCount);
+                    int invitationCount = mMyInvitationAdapter.getItemCount();
+                    int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
+                    // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
+                    // to the bottom of the list to show the newly added message.
+                    if (lastVisiblePosition == -1 ||
+                            (positionStart >= (invitationCount - 1) && lastVisiblePosition == (positionStart - 1))) {
+                        mRecyclerView.scrollToPosition(positionStart);
+                    }
+                }
+            });
+
+            mMyEventsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                @Override
+                public void onItemRangeInserted(int positionStart, int itemCount) {
+                    super.onItemRangeInserted(positionStart, itemCount);
+                    int invitationCount = mMyEventsAdapter.getItemCount();
+                    int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
+                    // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
+                    // to the bottom of the list to show the newly added message.
+                    if (lastVisiblePosition == -1 ||
+                            (positionStart >= (invitationCount - 1) && lastVisiblePosition == (positionStart - 1))) {
+                        mRecyclerView.scrollToPosition(positionStart);
+                    }
+                }
+            });
+
             if (mFirebaseAuth.getCurrentUser().getPhotoUrl() != null) {
                 Glide.with(this)
                         .load(mFirebaseAuth.getCurrentUser().getPhotoUrl())
@@ -494,8 +520,8 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().getItem(0).setVisible(true);
             navigationView.getMenu().getItem(1).setVisible(true);
             navigationView.getMenu().getItem(2).setVisible(true);
-
             navigationView.getMenu().getItem(6).setVisible(true);
+            bottomNavigation.setVisibility(View.VISIBLE);
 
         } else {
             mNavUserMail.setVisibility(View.GONE);
@@ -507,7 +533,7 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().getItem(1).setVisible(false);
             navigationView.getMenu().getItem(2).setVisible(false);
             navigationView.getMenu().getItem(6).setVisible(false);
-
+            bottomNavigation.setVisibility(View.INVISIBLE);
             mNavSignInButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

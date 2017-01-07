@@ -44,6 +44,8 @@
         android:layout_width="wrap_content"
         android:id="@+id/sign_in_button"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/authui_inputTextColor" />
+        android:backgroundTint="@color/transparent_white"
+        android:elevation="0dp"
+        android:textColor="@color/colorPrimary" />
 
 </LinearLayout>

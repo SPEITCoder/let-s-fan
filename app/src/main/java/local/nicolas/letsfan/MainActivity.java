@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,6 +52,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth mFirebaseAuth;
     private static final int RC_SIGN_IN = 9001;
     private static final int RC_CREATE_INVITATION = 9002;
+    private static final int RC_CREATE_USER = 9003;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference userRef;
     private DatabaseReference inviRef;
@@ -69,7 +69,25 @@ public class MainActivity extends AppCompatActivity
 
     private ActionBarDrawerToggle toggle;
     private View mRootView;
+    private User currentUser;
 
+    private ValueEventListener userListener = new ValueEventListener() {
+        @Override
+        public void onDataChange (DataSnapshot dataSnapshot) {
+            if (dataSnapshot.hasChildren()) {
+                currentUser = dataSnapshot.getValue(User.class);
+            } else {
+                // prompt to create new user
+                Log.d(TAG, "userListener onDataChange: Create user in database.");
+                startActivityForResult(new Intent(MainActivity.this, RegisterUserActivity.class), RC_CREATE_USER);
+            }
+        }
+        @Override
+        public void onCancelled (DatabaseError error) {
+            Log.d(TAG, "userListener.onCancelled: error");
+        }
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,15 +105,18 @@ public class MainActivity extends AppCompatActivity
         fab = (FloatingActionButton) findViewById(R.id.floatingActionButton2);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        mRootView = navigationView.getRootView();
+
+        mRootView = findViewById(R.id.content_invitation);
         mRecyclerView=(RecyclerView) findViewById(R.id.recyclerView);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
+
         String[] dataset = new String[100];
         for (int i = 0; i < dataset.length; i++) {
             dataset[i] = "item" + i;
         }
+
         RecyclerAdapter mAdapter = new RecyclerAdapter(dataset);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -105,25 +126,16 @@ public class MainActivity extends AppCompatActivity
         app.setmFirebaseDatabase(mFirebaseDatabase);
         app.setmFirebaseAuth(mFirebaseAuth);
 
-        if (app.getUser() == null) {
-            if(mFirebaseAuth.getCurrentUser() != null) {
-                String tmpuid = mFirebaseAuth.getCurrentUser().getUid();
-                // TODO
-                queryDatabaseForUser(tmpuid);
-            }
+        if (mFirebaseAuth.getCurrentUser() == null) {
+            app.setUser(null);
+        } else {
+            queryDatabaseForUser(mFirebaseAuth.getCurrentUser().getUid());
+            app.setUser(currentUser);
         }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // temporary solution
-                //String localNickName = mFirebaseAuth.getCurrentUser().getDisplayName();
-                //String localEmail = mFirebaseAuth.getCurrentUser().getEmail();
-                //currentUser = new User("localNickName", "Nicolas", "YING", "localEmail", 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, true);
-                //currentUser.createUserInDatabase(mFirebaseDatabase, mFirebaseAuth.getCurrentUser().getUid());
-                //store currentUser
-                app.setmFirebaseDatabase(mFirebaseDatabase);
-                app.setmFirebaseAuth(mFirebaseAuth);
                 Intent intent= new Intent(MainActivity.this,CreateInvitationActivity.class);
                 startActivity(intent);
             }
@@ -141,6 +153,7 @@ public class MainActivity extends AppCompatActivity
         };
         drawer.addDrawerListener(toggle);
         navigationView.setNavigationItemSelectedListener(this);
+        currentUser = app.getUser();
     }
 
     @OnClick(R.id.sign_in_button)
@@ -161,7 +174,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        final Data app=(Data)getApplication();
         super.onActivityResult(requestCode, resultCode, data);
         // Check which request we're responding to
         if (requestCode == RC_SIGN_IN) {
@@ -170,15 +182,7 @@ public class MainActivity extends AppCompatActivity
                 updateNav();
                 Snackbar.make(mRootView, "Signed in successfully.", Snackbar.LENGTH_LONG).show();
                 Query currentUserQuery = userRef.equalTo(mFirebaseAuth.getCurrentUser().getUid());
-                if ( !currentUserQuery.equals(mFirebaseAuth.getCurrentUser().getUid())) {
-                    // prompt to create new user
-                    Log.d(TAG, "onActivityResult: Create user in database.");
-                    // temporary solution
-                    String localNickName = mFirebaseAuth.getCurrentUser().getDisplayName();
-                    String localEmail = mFirebaseAuth.getCurrentUser().getEmail();
-                    app.setUser(new User(localNickName, "Nicolas", "YING", localEmail, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, true));
-                    app.getUser().createUserInDatabase(mFirebaseAuth.getCurrentUser().getUid());
-                }
+                currentUserQuery.addListenerForSingleValueEvent(userListener);
                 return;
             } else if (resultCode == RESULT_CANCELED) {
                 Snackbar.make(mRootView, "Signed in cancelled.", Snackbar.LENGTH_LONG).show();
@@ -195,6 +199,14 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             } else {
                 Snackbar.make(mRootView, "Invitation creation failed!" , Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        } else if (requestCode == RC_CREATE_USER) {
+            if (resultCode == RESULT_OK) {
+                Snackbar.make(mRootView, "User is successfully registered!" , Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            } else {
+                Snackbar.make(mRootView, "User registration failure!" , Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         }
@@ -228,11 +240,6 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
-        // Bind UI
-        mNavUserName = (TextView) findViewById(R.id.nav_head_user_name);
-        mNavUserMail = (TextView) findViewById(R.id.nav_header_user_mail);
-        mUserAvatar = (CircleImageView) findViewById(R.id.userAvatar);
-        mNavSignInButton = (Button) findViewById(R.id.sign_in_button);
 
         return true;
     }
@@ -243,6 +250,7 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.getMenu().clear();
         navigationView.inflateMenu(R.menu.activity_main_drawer);
+
 //
 //        if (mFirebaseAuth.getCurrentUser() == null) {
 //            MenuItem temp = navigationView.getMenu().getItem(R.id.nav_initiate_invitation);
@@ -335,28 +343,46 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updateNav() {
-        if(mFirebaseAuth.getCurrentUser() != null) {
+        mNavUserName = (TextView) findViewById(R.id.nav_head_user_name);
+        mNavUserMail = (TextView) findViewById(R.id.nav_header_user_mail);
+        mUserAvatar = (CircleImageView) findViewById(R.id.userAvatar);
+        mNavSignInButton = (Button) findViewById(R.id.sign_in_button);
+
+        if(currentUser != null && mFirebaseAuth.getCurrentUser() != null) {
             if (mFirebaseAuth.getCurrentUser().getPhotoUrl() != null) {
                 Glide.with(this)
                         .load(mFirebaseAuth.getCurrentUser().getPhotoUrl())
                         .fitCenter()
                         .into(mUserAvatar);
+            } else {
+                // TODO, replace with random avatar
+                Glide.with(this).load(getDrawable(R.drawable.side_nav_backg));
             }
 
-            mNavUserMail.setText(
-                    TextUtils.isEmpty(mFirebaseAuth.getCurrentUser().getEmail()) ? "No email" : mFirebaseAuth.getCurrentUser().getEmail());
-            mNavUserName.setText(
-                    TextUtils.isEmpty(mFirebaseAuth.getCurrentUser().getDisplayName()) ? "No display name" : mFirebaseAuth.getCurrentUser().getDisplayName());
+            mNavUserMail.setText(currentUser.getEmail());
+            mNavUserName.setText(currentUser.getNickName());
 
             mNavUserMail.setVisibility(View.VISIBLE);
             mNavSignInButton.setVisibility(View.GONE);
             mNavUserName.setVisibility(View.VISIBLE);
             mUserAvatar.setVisibility(View.VISIBLE);
+
+            navigationView.getMenu().getItem(0).setVisible(true);
+            navigationView.getMenu().getItem(1).setVisible(true);
+            navigationView.getMenu().getItem(2).setVisible(true);
+
+            navigationView.getMenu().getItem(6).setVisible(true);
+
         } else {
             mNavUserMail.setVisibility(View.GONE);
             mNavSignInButton.setVisibility(View.VISIBLE);
             mNavUserName.setVisibility(View.GONE);
             mUserAvatar.setVisibility(View.GONE);
+
+            navigationView.getMenu().getItem(0).setVisible(false);
+            navigationView.getMenu().getItem(1).setVisible(false);
+            navigationView.getMenu().getItem(2).setVisible(false);
+            navigationView.getMenu().getItem(6).setVisible(false);
 
             mNavSignInButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -368,10 +394,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void showCurrentInvitation()
-    {
-
-    }
 
 
     @Override
@@ -380,19 +402,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void queryDatabaseForUser (String uid) {
-        ValueEventListener userListener = new ValueEventListener() {
-            @Override
-            public void onDataChange (DataSnapshot dataSnapshot) {
-                User tmp = dataSnapshot.getValue(User.class);
-//                app.setUser(dataSnapshot.getValue(User.class));
-            }
-            @Override
-            public void onCancelled (DatabaseError error) {
-                Log.d(TAG, "queryDatabaseforUser.onCancelled: error");
-            }
 
-        };
-
-        userRef.equalTo(uid).addListenerForSingleValueEvent(userListener);
+        userRef.child(uid).addListenerForSingleValueEvent(userListener);
     }
 }

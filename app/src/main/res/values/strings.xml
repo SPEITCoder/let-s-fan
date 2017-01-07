@@ -18,6 +18,7 @@
     <string name="join_bottom_nav">Join</string>
     <string name="profile_bottom_nav">Profile</string>
     <string name="title_activity_create_invitation">CreateInvitationActivity</string>
+    <string name="title_activity_register_user">RegisterUserActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

@@ -50,7 +50,8 @@ public class CreateInvitationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 currentUser.createInvitation(app.getmFirebaseDatabase(), app.getmFirebaseAuth().getCurrentUser().getUid(),
                         startTime.getHour(), startTime.getMinute(), endTime.getHour(), endTime.getMinute(), eventDate.getYear(), eventDate.getMonth(), eventDate.getDayOfMonth(), "rid1");
-
+                setResult(RESULT_OK);
+                finish();
             }
         });
 
@@ -88,7 +89,7 @@ public class CreateInvitationActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
-        setResult(RESULT_OK);
+        setResult(RESULT_CANCELED);
         super.onStop();
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.

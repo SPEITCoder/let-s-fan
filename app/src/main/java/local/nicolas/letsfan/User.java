@@ -1,10 +1,17 @@
 package local.nicolas.letsfan;
 
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class User implements Serializable {
     private String firstName;
@@ -37,6 +44,7 @@ public class User implements Serializable {
         email = _email;
         tasteVariation = _taste_variation;
         isInfoPublic = _is_public;
+        tasteVector = new HashMap<>();
         tasteVector.put("sour", _taste_sour);
         tasteVector.put("sweet", _taste_sweet);
         tasteVector.put("spice", _taste_spice);
@@ -54,7 +62,7 @@ public class User implements Serializable {
         userRef.child(uid).child("tasteVector").setValue(tasteVector);
     }
 
-    public void createInvitation (FirebaseDatabase db, String uid, int startTimeHour, int startTimeMinute, int endTimeHour, int endTimeMinute, int dateYear, int dateMonth, int dateDay, String _restaurant) {
+    public void createInvitation (FirebaseDatabase db, String uid, int startTimeHour, int startTimeMinute, int endTimeHour, int endTimeMinute, int dateYear, int dateMonth, int dateDay, String _restaurant, String _restaurantName) {
 
         // timestamp
         Long timeStamp = System.currentTimeMillis();
@@ -72,10 +80,10 @@ public class User implements Serializable {
         currentRef.child("organizer").setValue(uid);
         currentRef.child("organizerNickName").setValue(nickName);
         currentRef.child("restaurant").setValue(_restaurant);
-        // TODO, replace resaurantName
-        currentRef.child("restaurantName").setValue(restRef.child(_restaurant).child("name").toString());
+        currentRef.child("restaurantName").setValue(_restaurantName);
         currentRef.child("tasteVariation").setValue(3);
         currentRef.child("creationTime").setValue(timeStamp);
+        currentRef.child("id").setValue(pushID);
 
         // index on invitationAttendees
         DatabaseReference invAttendeeRef = db.getReference("invitationAttendees");
@@ -92,9 +100,10 @@ public class User implements Serializable {
         userInEventsRef.child(uid).child(pushID).child("dateMonth").setValue(dateMonth);
         userInEventsRef.child(uid).child(pushID).child("dateDay").setValue(dateDay);
         userInEventsRef.child(uid).child(pushID).child("organizerName").setValue(nickName);
+        userInEventsRef.child(uid).child(pushID).child("restaurantName").setValue(_restaurantName);
         userInEventsRef.child(uid).child(pushID).child("creationTime").setValue(timeStamp);
+        userInEventsRef.child(uid).child(pushID).child("id").setValue(pushID);
     }
-
 
 }
 

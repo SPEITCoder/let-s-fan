@@ -130,6 +130,8 @@ public class MainActivity extends AppCompatActivity
             if (dataSnapshot.hasChildren()) {
                 currentUser = dataSnapshot.getValue(User.class);
                 updateNav();
+            } else {
+                startActivityForResult(new Intent(MainActivity.this, RegisterUserActivity.class), RC_CREATE_USER);
             }
         }
         @Override
@@ -322,6 +324,7 @@ public class MainActivity extends AppCompatActivity
                 Snackbar.make(mRootView, "User is successfully registered!" , Snackbar.LENGTH_LONG).setActionTextColor(getColor(R.color.white))
                         .setAction("Action", null).show();
                 currentUser = (User) data.getSerializableExtra("currentUser");
+                updateNav();
             } else {
                 Snackbar.make(mRootView, "User registration failure!" , Snackbar.LENGTH_LONG).setActionTextColor(getColor(R.color.white))
                         .setAction("Action", null).show();

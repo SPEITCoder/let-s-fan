@@ -50,7 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/my_invitation_restaurant"
-                    android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                     />
 
                 <local.nicolas.letsfan.TextDate
                     android:fontFamily="sans-serif-thin"

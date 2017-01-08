@@ -79,16 +79,20 @@ public class MainActivity extends AppCompatActivity
     //viewholder
     public static class InvitationViewHolder extends RecyclerView.ViewHolder {
         public TextView organizerTextView;
-        public TextView dateTextView;
-        public TextView availableSlotTextView;
+        public TextDate dateTextView;
+        //public TextView availableSlotTextView;
+        public TextTime startTextView;
+        public TextTime endTextView;
         public ImageView invitationImageView;
 
         public InvitationViewHolder(View v) {
             super(v);
             organizerTextView = (TextView) itemView.findViewById(R.id.invitation_organiser);
-            dateTextView = (TextView) itemView.findViewById(R.id.invitation_date);
-            availableSlotTextView = (TextView) itemView.findViewById(R.id.invitation_available_slot);
+            //availableSlotTextView = (TextView) itemView.findViewById(R.id.invitation_available_slot);
             invitationImageView = (ImageView) itemView.findViewById(R.id.invitation_card_image);
+            dateTextView = (TextDate) itemView.findViewById(R.id.invitation_card_date);
+            startTextView = (TextTime) itemView.findViewById(R.id.invitation_card_start);
+            endTextView = (TextTime) itemView.findViewById(R.id.invitation_card_end);
         }
     }
 
@@ -173,13 +177,15 @@ public class MainActivity extends AppCompatActivity
             @Override
             protected void populateViewHolder(InvitationViewHolder viewHolder, final Invitation invitation, final int position) {
                 //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                String mDate=invitation.getDateMonth().toString()+"月"+invitation.getDateDay()+"日";
+
                 viewHolder.organizerTextView.setText(invitation.getOrganizerNickName());
-                viewHolder.dateTextView.setText(mDate);
+                viewHolder.dateTextView.setDate(invitation.getDateYear().intValue(), invitation.getDateMonth().intValue(), invitation.getDateDay().intValue());
+                viewHolder.startTextView.setTime(invitation.getStartTimeHour().intValue(), invitation.getStartTimeMinute().intValue());
+                viewHolder.endTextView.setTime(invitation.getEndTimeHour().intValue(), invitation.getEndTimeMinute().intValue());
+
                 if(invitation.getRestaurantName().equals("Hallo House")) {viewHolder.invitationImageView.setImageResource(R.drawable.canteen_1);}
                 else if(invitation.getRestaurantName().equals("1st Canteen, 1F")){viewHolder.invitationImageView.setImageResource(R.drawable.canteen_2);}
                 else if(invitation.getRestaurantName().equals("1st Canteen, 2F")){viewHolder.invitationImageView.setImageResource(R.drawable.canteen_3);}
-
 //                viewHolder.itemView.setBackgroundColor(colorIterator(i++));
 
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {

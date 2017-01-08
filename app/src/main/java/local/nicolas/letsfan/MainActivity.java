@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity
     private static final int RC_SIGN_IN = 9001;
     private static final int RC_CREATE_INVITATION = 9002;
     private static final int RC_CREATE_USER = 9003;
+    private int i = 0;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference userRef;
     private DatabaseReference inviRef;
@@ -175,6 +176,7 @@ public class MainActivity extends AppCompatActivity
                 String mDate=invitation.getDateMonth().toString()+"月"+invitation.getDateDay()+"日";
                 viewHolder.organizerTextView.setText(invitation.getOrganizerNickName());
                 viewHolder.dateTextView.setText(mDate);
+                viewHolder.itemView.setBackgroundColor(colorIterator(i++));
 
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -466,6 +468,7 @@ public class MainActivity extends AppCompatActivity
                     viewHolder.startTextView.setTime(invitation.getStartTimeHour().intValue(), invitation.getStartTimeMinute().intValue());
                     viewHolder.endTextView.setTime(invitation.getEndTimeHour().intValue(), invitation.getEndTimeMinute().intValue());
 
+                    viewHolder.itemView.setBackgroundColor(colorIterator(i++));
                     viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view){
@@ -495,6 +498,7 @@ public class MainActivity extends AppCompatActivity
                     viewHolder.dateTextView.setDate(event.getDateYear().intValue(), event.getDateMonth().intValue(), event.getDateDay().intValue());
                     viewHolder.RestaurantTextView.setText(event.getRestaurantName());
 
+                    viewHolder.itemView.setBackgroundColor(colorIterator(i++));
                     viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view){
@@ -597,5 +601,10 @@ public class MainActivity extends AppCompatActivity
         userRef.child(uid).addListenerForSingleValueEvent(userListener);
     }
 
+    public int colorIterator(int i) {
+        // TODO
+//        switch (i % )
+        return android.R.color.white;
+    }
 
 }

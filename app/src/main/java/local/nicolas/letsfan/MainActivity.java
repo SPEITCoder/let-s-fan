@@ -219,9 +219,9 @@ public class MainActivity extends AppCompatActivity
                     viewHolder.restTextView.setText(String.valueOf(diffHour) + " H " + String.valueOf(diffMin) + " Min");
                 }
 
-                if(invitation.getRestaurantName().equals("Hallo House")) {viewHolder.invitationImageView.setImageResource(R.drawable.canteen_1);}
-                else if(invitation.getRestaurantName().equals("1st Canteen, 1F")){viewHolder.invitationImageView.setImageResource(R.drawable.canteen_2);}
-                else if(invitation.getRestaurantName().equals("1st Canteen, 2F")){viewHolder.invitationImageView.setImageResource(R.drawable.canteen_3);}
+                if(invitation.getRestaurantName().equals("蛤乐餐厅")) {viewHolder.invitationImageView.setImageResource(R.drawable.canteen_1);}
+                else if(invitation.getRestaurantName().equals("第一餐饮大楼一层")){viewHolder.invitationImageView.setImageResource(R.drawable.canteen_2);}
+                else if(invitation.getRestaurantName().equals("第一餐饮大楼二层")){viewHolder.invitationImageView.setImageResource(R.drawable.canteen_3);}
 //                viewHolder.itemView.setBackgroundColor(colorIterator(i++));
 
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -513,9 +513,9 @@ public class MainActivity extends AppCompatActivity
                     viewHolder.dateTextView.setDate(invitation.getDateYear().intValue(), invitation.getDateMonth().intValue(), invitation.getDateDay().intValue());
                     viewHolder.startTextView.setTime(invitation.getStartTimeHour().intValue(), invitation.getStartTimeMinute().intValue());
                     viewHolder.endTextView.setTime(invitation.getEndTimeHour().intValue(), invitation.getEndTimeMinute().intValue());
-                    if(invitation.getRestaurantName().equals("Hallo House")) {viewHolder.invitationImageView.setImageResource(R.drawable.canteen_1);}
-                    else if(invitation.getRestaurantName().equals("1st Canteen, 1F")){viewHolder.invitationImageView.setImageResource(R.drawable.canteen_2);}
-                    else if(invitation.getRestaurantName().equals("1st Canteen, 2F")){viewHolder.invitationImageView.setImageResource(R.drawable.canteen_3);}
+                    if(invitation.getRestaurantName().equals("蛤乐餐厅")) {viewHolder.invitationImageView.setImageResource(R.drawable.canteen_1);}
+                    else if(invitation.getRestaurantName().equals("第一餐饮大楼一层")){viewHolder.invitationImageView.setImageResource(R.drawable.canteen_2);}
+                    else if(invitation.getRestaurantName().equals("第一餐饮大楼二层")){viewHolder.invitationImageView.setImageResource(R.drawable.canteen_3);}
 
 //                    viewHolder.itemView.setBackgroundColor(colorIterator(i++));
                     viewHolder.itemView.setOnClickListener(new View.OnClickListener() {

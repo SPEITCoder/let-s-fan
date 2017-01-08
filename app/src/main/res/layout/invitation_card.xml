@@ -31,25 +31,85 @@
                 android:layout_toEndOf="@+id/invitation_card_image"
                 android:layout_centerVertical="true">
 
-                        <TextView
-                                android:text="Nicolas INVITER"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/invitation_organiser"
-                                android:layout_gravity="center"
-                                android:textAppearance="@android:style/TextAppearance.Material.Medium"
-                            android:textAlignment="center"
-                            android:fontFamily="sans-serif"
-                            android:textSize="20sp"
-                            android:textAllCaps="false" />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                        <local.nicolas.letsfan.TextDate
+                    <TextView
+                                    android:text="Nicolas INVITER"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/invitation_organiser"
+                                    android:layout_gravity="center"
+                                    android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                                android:textAlignment="textEnd"
+                                android:fontFamily="sans-serif"
+                                android:textSize="20sp"
+                                android:textAllCaps="false"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:text="\@"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView14"
+                        android:layout_gravity="center"
+                        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                        android:textAlignment="center"
+                        android:fontFamily="sans-serif"
+                        android:textSize="20sp"
+                        android:textAllCaps="false"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:text="Nicolas INVITER"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/invitation_restaurant"
+                        android:layout_gravity="center"
+                        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                        android:textAlignment="textStart"
+                        android:fontFamily="sans-serif"
+                        android:textSize="20sp"
+                        android:textAllCaps="false"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
+
+                <local.nicolas.letsfan.TextDate
                             android:fontFamily="sans-serif-thin"
                             android:id="@+id/invitation_card_date"
                             android:layout_width="match_parent"
                             android:textSize="20sp"
                             android:layout_height="wrap_content"
                             android:textAlignment="center" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp">
+
+                    <TextView
+                        android:text="Start in :    "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView11"
+                        android:layout_weight="1"
+                        android:textAlignment="textEnd"
+                        android:fontFamily="sans-serif"
+                        android:textSize="20dp" />
+
+                    <TextView
+                        android:text="12h31m"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/remaining_time_textview"
+                        android:layout_weight="1"
+                        android:textSize="20dp" />
+                </LinearLayout>
 
                 <RelativeLayout
                     android:orientation="horizontal"
@@ -76,13 +136,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="18sp"
-                            android:layout_weight="1" />
-
-                        <TextView
-                            android:text="TextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/textView11"
                             android:layout_weight="1" />
 
                     </LinearLayout>
@@ -112,29 +165,6 @@
                     </LinearLayout>
 
             </RelativeLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:text="Time Remaining: "
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/textView11"
-                        android:textSize="13sp"
-                        android:layout_weight="1"
-                        android:textAlignment="textEnd" />
-
-                    <TextView
-                        android:text="12h31m"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/remaining_time_textview"
-                        android:textSize="13sp"
-                        android:layout_weight="1" />
-                </LinearLayout>
 
             </LinearLayout>
 

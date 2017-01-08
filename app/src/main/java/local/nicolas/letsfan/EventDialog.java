@@ -127,9 +127,9 @@ public class EventDialog extends DialogFragment {
         mEndTime = (TextTime) v.findViewById(R.id.invitation_end_opened);
         mEventDate = (TextDate) v.findViewById(R.id.invitation_date_opened);
 
-        if(event.getRestaurantName().equals("Hallo House")) {mImageView.setImageResource(R.drawable.canteen_1);}
-        else if(event.getRestaurantName().equals("1st Canteen, 1F")){mImageView.setImageResource(R.drawable.canteen_2);}
-        else if(event.getRestaurantName().equals("1st Canteen, 2F")){mImageView.setImageResource(R.drawable.canteen_3);}
+        if(event.getRestaurantName().equals("蛤乐餐厅")) {mImageView.setImageResource(R.drawable.canteen_1);}
+        else if(event.getRestaurantName().equals("第一餐饮大楼一层")){mImageView.setImageResource(R.drawable.canteen_2);}
+        else if(event.getRestaurantName().equals("第一餐饮大楼二层")){mImageView.setImageResource(R.drawable.canteen_3);}
         mRestaurantName.setText(event.getRestaurantName());
         mStartTime.setVisibility(View.GONE);
         mEndTime.setVisibility(View.GONE);

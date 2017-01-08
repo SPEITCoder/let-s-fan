@@ -18,7 +18,7 @@
     <string name="password_length">Strong passwords have at least %1$d characters and a mix of letters
         and numbers</string>
     <string name="required_field">You can\'t leave this empty.</string>
-    <string name="initiate_bottom_nav">Ny Invitations</string>
+    <string name="initiate_bottom_nav">My Invitations</string>
     <string name="join_bottom_nav">Join</string>
     <string name="profile_bottom_nav">My Events</string>
     <string name="title_activity_create_invitation">Create Invitation</string>

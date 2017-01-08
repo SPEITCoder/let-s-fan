@@ -3,7 +3,6 @@ package local.nicolas.letsfan;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.internal.BottomNavigationMenu;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -32,7 +31,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -354,8 +352,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-
-
         return true;
     }
 
@@ -589,43 +585,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-//    public static class AlertDialogFragment extends DialogFragment{
-//        public static AlertDialogFragment newInstance(){
-//            AlertDialogFragment newInstance = new AlertDialogFragment();
-//            return newInstance;
-//        }
-//        Context mContext = getApplicationContext();
-//        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
-//        View layout = inflater.inflate(R.layout.invitation_dialog,
-//                (ViewGroup) findViewById(R.id.dialog));
-//        @Override
-//        public Dialog onCreateDialog(Bundle savedInstanceState){
-//            AlertDialog.Builder alertDialog=new AlertDialog.Builder(getActivity());
-//            alertDialog.setTitle("Alert Dialog");
-//            alertDialog.setMessage("You have been alerted");
-//
-//
-//            //LayoutInflater inflater = getLayoutInflater();
-//
-//            alertDialog.setView(layout);
-//            alertDialog.setPositiveButton(android.R.string.ok,
-//                    new DialogInterface.OnClickListener(){                        @Override
-//                        public void onClick(DialogInterface dialog, int which){
-//                            Toast.makeText(getActivity(),"Clicked OK!", Toast.LENGTH_SHORT).show();
-//                            return;
-//                        }
-//                    });
-//            return alertDialog.create();
-//        }
-//    }
-//
-//    void showDialogFragment(DialogFragment newFragment){
-//        //FragmentManager fragmentManager = newFragment.getFragmentManager();
-//        newFragment.show(getFragmentManager(),null);
-//    }
-
-
-
     @Override
     public void onStop() {
         super.onStop();
@@ -634,8 +593,6 @@ public class MainActivity extends AppCompatActivity
     private void queryDatabaseForUser (String uid) {
         userRef.child(uid).addListenerForSingleValueEvent(userListener);
     }
-
-
 
 
 }

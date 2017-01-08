@@ -106,6 +106,13 @@
 
             </RelativeLayout>
 
+                <TextView
+                    android:text="Time Remaining:"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView12"
+                    android:textSize="13sp" />
+
             </LinearLayout>
 
         </RelativeLayout>

@@ -2,6 +2,7 @@
 
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         app:cardElevation="2dp"
         app:contentPadding="10px"
@@ -43,7 +44,7 @@
                                     android:id="@+id/invitation_organiser"
                                     android:layout_gravity="center"
                                     android:textAppearance="@android:style/TextAppearance.Material.Medium"
-                                android:textAlignment="textEnd"
+                                android:textAlignment="center"
                                 android:fontFamily="sans-serif"
                                 android:textSize="20sp"
                                 android:textAllCaps="false"
@@ -88,19 +89,79 @@
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="0dp">
+
+                        <TextView
+                            android:text="From"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="sans-serif"
+                            android:textSize="12sp"
+                            android:paddingLeft="40dp" />
+
+                        <local.nicolas.letsfan.TextTime
+                            android:fontFamily="sans-serif-thin"
+                            android:id="@+id/invitation_card_start"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:layout_weight="1"
+                            android:paddingLeft="5dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView8"
+                            android:fontFamily="sans-serif"
+                            android:textSize="12sp"
+                            android:text="To"
+                            android:paddingEnd="10dp"
+                            android:paddingLeft="10dp" />
+
+                        <local.nicolas.letsfan.TextTime
+                            android:fontFamily="sans-serif-thin"
+                            android:id="@+id/invitation_card_end"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:layout_weight="1" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingTop="3dp"
                     android:paddingBottom="3dp">
 
                     <TextView
-                        android:text="Start in :    "
+                        android:text="Start in :  "
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/textView11"
                         android:layout_weight="1"
                         android:textAlignment="textEnd"
                         android:fontFamily="sans-serif"
-                        android:textSize="20dp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:text="12h31m"
@@ -108,63 +169,9 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/remaining_time_textview"
                         android:layout_weight="1"
-                        android:textSize="20dp" />
+                        android:textSize="14sp" />
+
                 </LinearLayout>
-
-                <RelativeLayout
-                    android:orientation="horizontal"
-                    android:layout_width="152dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal">
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="0dp">
-
-                        <TextView
-                            android:text="Start time"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:fontFamily="sans-serif" />
-
-                        <local.nicolas.letsfan.TextTime
-                            android:fontFamily="sans-serif-thin"
-                            android:id="@+id/invitation_card_start"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:layout_weight="1" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        >
-
-                        <TextView
-                            android:text="End Time"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/textView8"
-                            android:layout_weight="1"
-                            android:fontFamily="sans-serif" />
-
-                        <local.nicolas.letsfan.TextTime
-                            android:fontFamily="sans-serif-thin"
-                            android:id="@+id/invitation_card_end"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-            </RelativeLayout>
 
             </LinearLayout>
 

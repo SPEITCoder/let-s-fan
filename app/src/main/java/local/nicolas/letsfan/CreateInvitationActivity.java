@@ -1,5 +1,7 @@
 package local.nicolas.letsfan;
 
+import android.app.ProgressDialog;
+import android.os.CountDownTimer;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.DialogFragment;
 import android.app.FragmentManager;
@@ -21,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -114,10 +117,23 @@ public class CreateInvitationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (vadilateInput()) {
-                    currentUser.createInvitation(FirebaseDatabase.getInstance(), FirebaseAuth.getInstance().getCurrentUser().getUid(),
-                            startTime.getHour(), startTime.getMinute(), endTime.getHour(), endTime.getMinute(), eventDate.getYear(), eventDate.getMonth(), eventDate.getDayOfMonth(), restoID.get(restaurantSelector.getSelectedItemPosition()), restos.get(restaurantSelector.getSelectedItemPosition()));
-                    setResult(RESULT_OK);
-                    finish();
+                    currentUser.createInvitation(FirebaseDatabase.getInstance(), FirebaseAuth.getInstance().getCurrentUser().getUid(), startTime.getHour(), startTime.getMinute(), endTime.getHour(), endTime.getMinute(), eventDate.getYear(), eventDate.getMonth(), eventDate.getDayOfMonth(), restoID.get(restaurantSelector.getSelectedItemPosition()), restos.get(restaurantSelector.getSelectedItemPosition()));
+                    ProgressBar tmp = (ProgressBar) findViewById(R.id.progressBar_creation);
+                    tmp.setVisibility(View.VISIBLE);
+                    CountDownTimer mCountDownTimer = new CountDownTimer(5000,1000) {
+
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            setResult(RESULT_OK);
+                            finish();
+                        }
+                    };
+                    mCountDownTimer.start();
                 }
             }
         });

@@ -23,7 +23,7 @@
 
                 <ImageView
                     android:id="@+id/my_invitation_imageView"
-                    app:srcCompat="@drawable/side_nav_backg"
+                    app:srcCompat="@drawable/canteen_2"
                     android:layout_marginRight="10dp"
                     android:adjustViewBounds="false"
                     android:cropToPadding="false"

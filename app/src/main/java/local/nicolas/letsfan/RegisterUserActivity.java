@@ -2,6 +2,7 @@ package local.nicolas.letsfan;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -10,9 +11,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import local.nicolas.letsfan.auth.ui.email.field_validators.RequiredFieldValidator;
 
@@ -78,10 +81,24 @@ public class RegisterUserActivity extends AppCompatActivity {
                     User currentUser = new User(nickNameString , firstNameString, lastNameString, FirebaseAuth.getInstance().getCurrentUser().getEmail(), ((double) 1 + tasteVariation.getProgress()), ((double) 1 + tasteSour.getProgress()), ((double) 1 + tasteSweet.getProgress()), ((double) 1 + tasteBitter.getProgress()), ((double) 1 + tasteSpice.getProgress()), ((double) 1 + tasteSalt.getProgress()), isInfoPublic.isChecked());
                     currentUser.createUserInDatabase(FirebaseAuth.getInstance().getCurrentUser().getUid());
                     Log.d(TAG, "fabOnClick: create user in database request sent.");
-                    Intent mIntent = new Intent();
+                    final Intent mIntent = new Intent();
                     mIntent.putExtra("currentUser", currentUser);
-                    setResult(RESULT_OK, mIntent);
-                    finish();
+                    ProgressBar tmp = (ProgressBar) findViewById(R.id.progressBar_registration);
+                    tmp.setVisibility(View.VISIBLE);
+                    CountDownTimer mCountDownTimer = new CountDownTimer(3000,1000) {
+
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            setResult(RESULT_OK, mIntent);
+                            finish();
+                        }
+                    };
+                    mCountDownTimer.start();
                 }
             }
         });

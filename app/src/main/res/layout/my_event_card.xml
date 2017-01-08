@@ -3,7 +3,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="160px"
+    android:layout_height="wrap_content"
     app:cardElevation="2dp"
     app:contentPadding="10px"
     android:theme="@style/CardView.Light"
@@ -22,15 +22,15 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:layout_width="100px"
-                android:layout_height="100px"
-                android:id="@+id/imageView"
+                android:id="@+id/my_event_imageView"
                 app:srcCompat="@drawable/side_nav_backg"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:layout_width="130dp"
+                android:layout_height="130dp" />
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
 

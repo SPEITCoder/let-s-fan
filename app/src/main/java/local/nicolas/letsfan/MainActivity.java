@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity
     private View mRootView;
     private User currentUser;
 
+    private ArrayList<Integer> AvatarList;
+
     //viewholder
     public static class InvitationViewHolder extends RecyclerView.ViewHolder {
         public TextView organizerTextView;
@@ -105,8 +107,7 @@ public class MainActivity extends AppCompatActivity
             dateTextView = (TextDate) itemView.findViewById(R.id.my_invitation_date);
             startTextView = (TextTime) itemView.findViewById(R.id.my_invitation_start);
             endTextView = (TextTime) itemView.findViewById(R.id.my_invitation_end);
-
-            invitationImageView = (ImageView) itemView.findViewById(R.id.invitation_card_image);
+            invitationImageView = (ImageView) itemView.findViewById(R.id.my_invitation_imageView);
         }
     }
 
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity
             organizerTextView = (TextView) itemView.findViewById(R.id.my_event_organiser);
             dateTextView = (TextDate) itemView.findViewById(R.id.my_event_date);
             RestaurantTextView = (TextView) itemView.findViewById(R.id.my_event_restaurant);
-            invitationImageView = (ImageView) itemView.findViewById(R.id.invitation_card_image);
+            invitationImageView = (ImageView) itemView.findViewById(R.id.my_event_imageView);
         }
     }
 
@@ -150,6 +151,16 @@ public class MainActivity extends AppCompatActivity
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         userRef = mFirebaseDatabase.getReference("users");
         inviRef = mFirebaseDatabase.getReference("invitations");
+
+        AvatarList = new ArrayList<>();
+        AvatarList.add(R.drawable.corgia);
+        AvatarList.add(R.drawable.dog);
+        AvatarList.add(R.drawable.dribbble_corgi);
+        AvatarList.add(R.drawable.fox_dribbble);
+        AvatarList.add(R.drawable.notacorgi);
+        AvatarList.add(R.drawable.paco);
+        AvatarList.add(R.drawable.puppy);
+        AvatarList.add(R.drawable.schnauzer);
 
         // UI binding
         setContentView(R.layout.activity_main);
@@ -504,8 +515,7 @@ public class MainActivity extends AppCompatActivity
                     viewHolder.organizerTextView.setText(event.getOrganizerName());
                     viewHolder.dateTextView.setDate(event.getDateYear().intValue(), event.getDateMonth().intValue(), event.getDateDay().intValue());
                     viewHolder.RestaurantTextView.setText(event.getRestaurantName());
-                    // TODO
-                    viewHolder.invitationImageView.setImageResource(R.drawable.canteen_1);
+                    viewHolder.invitationImageView.setImageResource(AvatarList.get(i++ % AvatarList.size()));
 //                    viewHolder.itemView.setBackgroundColor(colorIterator(i++));
                     viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -600,6 +610,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+//    @Override
+//    public void onDestroy() {
+//        AvatarList.clear();
+//        super.onDestroy();
+//    }
+
     @Override
     public void onStop() {
         super.onStop();
@@ -609,10 +625,5 @@ public class MainActivity extends AppCompatActivity
         userRef.child(uid).addListenerForSingleValueEvent(userListener);
     }
 
-    public int colorIterator(int i) {
-        // TODO
-//        switch (i % )
-        return android.R.color.white;
-    }
 
 }

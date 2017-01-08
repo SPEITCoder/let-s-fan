@@ -121,7 +121,7 @@ public class EventDialog extends DialogFragment {
         mEndTime.setVisibility(View.GONE);
         v.findViewById(R.id.textView110).setVisibility(View.GONE);
         v.findViewById(R.id.textView118).setVisibility(View.GONE);
-        v.findViewById(R.id.space111).setVisibility(View.GONE);
+//        v.findViewById(R.id.space111).setVisibility(View.GONE);
         mEventDate.setDate(event.getDateYear().intValue(), event.getDateMonth().intValue(), event.getDateDay().intValue());
 
         return builder.create();

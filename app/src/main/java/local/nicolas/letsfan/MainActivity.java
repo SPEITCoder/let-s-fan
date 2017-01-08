@@ -320,6 +320,7 @@ public class MainActivity extends AppCompatActivity
                 Snackbar.make(mRootView, "User is successfully registered!" , Snackbar.LENGTH_LONG).setActionTextColor(getColor(R.color.white))
                         .setAction("Action", null).show();
                 currentUser = (User) data.getSerializableExtra("currentUser");
+                updateNav();
             } else {
                 Snackbar.make(mRootView, "User registration failure!" , Snackbar.LENGTH_LONG).setActionTextColor(getColor(R.color.white))
                         .setAction("Action", null).show();

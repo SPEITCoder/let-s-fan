@@ -16,10 +16,10 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:layout_width="40px"
-                android:layout_height="40px"
-                android:id="@+id/imageView"
-                app:srcCompat="@drawable/side_nav_backg" />
+                android:id="@+id/invitation_imageView"
+                app:srcCompat="@drawable/side_nav_backg"
+                android:layout_width="165px"
+                android:layout_height="165px" />
 
             <TextView
                 android:text="Nicolas INVITER"

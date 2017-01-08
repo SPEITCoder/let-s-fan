@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -121,7 +120,7 @@ public class EventDialog extends DialogFragment {
         mEndTime.setVisibility(View.GONE);
         v.findViewById(R.id.textView110).setVisibility(View.GONE);
         v.findViewById(R.id.textView118).setVisibility(View.GONE);
-        v.findViewById(R.id.space111).setVisibility(View.GONE);
+        //v.findViewById(R.id.space111).setVisibility(View.GONE);
         mEventDate.setDate(event.getDateYear().intValue(), event.getDateMonth().intValue(), event.getDateDay().intValue());
 
         return builder.create();

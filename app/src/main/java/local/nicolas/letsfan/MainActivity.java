@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
             organizerTextView = (TextView) itemView.findViewById(R.id.invitation_organiser);
             dateTextView = (TextView) itemView.findViewById(R.id.invitation_date);
             availableSlotTextView = (TextView) itemView.findViewById(R.id.invitation_available_slot);
-            //invitationImageView = (ImageView) itemView.findViewById(R.id.invitation_image);
+            invitationImageView = (ImageView) itemView.findViewById(R.id.invitation_imageView);
         }
     }
 
@@ -173,6 +173,10 @@ public class MainActivity extends AppCompatActivity
                 String mDate=invitation.getDateMonth().toString()+"月"+invitation.getDateDay()+"日";
                 viewHolder.organizerTextView.setText(invitation.getOrganizerNickName());
                 viewHolder.dateTextView.setText(mDate);
+                if(invitation.getRestaurantName().equals("Hallo House")) {viewHolder.invitationImageView.setImageResource(R.drawable.canteen_1);}
+                else if(invitation.getRestaurantName().equals("1st Canteen, 1F")){viewHolder.invitationImageView.setImageResource(R.drawable.canteen_2);}
+                else if(invitation.getRestaurantName().equals("1st Canteen, 2F")){viewHolder.invitationImageView.setImageResource(R.drawable.canteen_3);}
+
 
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

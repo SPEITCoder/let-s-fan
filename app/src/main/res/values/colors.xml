@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#101f2e</color>
+    <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#101f2e</color>
     <color name="colorAccent">#f7d31b</color>
     <color name="colorAccentY">#f7d31b</color>
@@ -12,4 +12,5 @@
     <color name="white">#FFFFFF</color>
     <color name="nav_tint">#CCCCCC</color>
     <color name="transparent_white">#b0ffffff</color>
+    <color name="google_grey">#EEEEEE</color>
 </resources>

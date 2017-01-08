@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity
             organizerTextView = (TextView) itemView.findViewById(R.id.invitation_organiser);
             dateTextView = (TextView) itemView.findViewById(R.id.invitation_date);
             availableSlotTextView = (TextView) itemView.findViewById(R.id.invitation_available_slot);
-            invitationImageView = (ImageView) itemView.findViewById(R.id.invitation_imageView);
+            invitationImageView = (ImageView) itemView.findViewById(R.id.invitation_card_image);
         }
     }
 
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity
             startTextView = (TextTime) itemView.findViewById(R.id.my_invitation_start);
             endTextView = (TextTime) itemView.findViewById(R.id.my_invitation_end);
 
-            //invitationImageView = (ImageView) itemView.findViewById(R.id.invitation_image);
+            invitationImageView = (ImageView) itemView.findViewById(R.id.invitation_card_image);
         }
     }
 
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity
             organizerTextView = (TextView) itemView.findViewById(R.id.my_event_organiser);
             dateTextView = (TextDate) itemView.findViewById(R.id.my_event_date);
             RestaurantTextView = (TextView) itemView.findViewById(R.id.my_event_restaurant);
-            //invitationImageView = (ImageView) itemView.findViewById(R.id.invitation_image);
+            invitationImageView = (ImageView) itemView.findViewById(R.id.invitation_card_image);
         }
     }
 
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity
                 else if(invitation.getRestaurantName().equals("1st Canteen, 1F")){viewHolder.invitationImageView.setImageResource(R.drawable.canteen_2);}
                 else if(invitation.getRestaurantName().equals("1st Canteen, 2F")){viewHolder.invitationImageView.setImageResource(R.drawable.canteen_3);}
 
-                viewHolder.itemView.setBackgroundColor(colorIterator(i++));
+//                viewHolder.itemView.setBackgroundColor(colorIterator(i++));
 
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -471,8 +471,11 @@ public class MainActivity extends AppCompatActivity
                     viewHolder.dateTextView.setDate(invitation.getDateYear().intValue(), invitation.getDateMonth().intValue(), invitation.getDateDay().intValue());
                     viewHolder.startTextView.setTime(invitation.getStartTimeHour().intValue(), invitation.getStartTimeMinute().intValue());
                     viewHolder.endTextView.setTime(invitation.getEndTimeHour().intValue(), invitation.getEndTimeMinute().intValue());
+                    if(invitation.getRestaurantName().equals("Hallo House")) {viewHolder.invitationImageView.setImageResource(R.drawable.canteen_1);}
+                    else if(invitation.getRestaurantName().equals("1st Canteen, 1F")){viewHolder.invitationImageView.setImageResource(R.drawable.canteen_2);}
+                    else if(invitation.getRestaurantName().equals("1st Canteen, 2F")){viewHolder.invitationImageView.setImageResource(R.drawable.canteen_3);}
 
-                    viewHolder.itemView.setBackgroundColor(colorIterator(i++));
+//                    viewHolder.itemView.setBackgroundColor(colorIterator(i++));
                     viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view){
@@ -501,8 +504,9 @@ public class MainActivity extends AppCompatActivity
                     viewHolder.organizerTextView.setText(event.getOrganizerName());
                     viewHolder.dateTextView.setDate(event.getDateYear().intValue(), event.getDateMonth().intValue(), event.getDateDay().intValue());
                     viewHolder.RestaurantTextView.setText(event.getRestaurantName());
-
-                    viewHolder.itemView.setBackgroundColor(colorIterator(i++));
+                    // TODO
+                    viewHolder.invitationImageView.setImageResource(R.drawable.canteen_1);
+//                    viewHolder.itemView.setBackgroundColor(colorIterator(i++));
                     viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view){

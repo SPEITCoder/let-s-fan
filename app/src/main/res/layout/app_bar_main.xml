@@ -39,7 +39,9 @@
         app:itemTextColor="@color/colorAccent"
         app:menu="@menu/bottom_navigation_main"
         android:layout_alignParentBottom="true"
-        tools:ignore="RtlHardcoded" />
+        tools:ignore="RtlHardcoded"
+        app:elevation="13dp"
+        android:theme="@style/Widget.Design.NavigationView" />
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
@@ -49,12 +51,13 @@
         app:srcCompat="@android:drawable/ic_menu_add"
         android:id="@+id/floatingActionButton2"
         app:layout_anchor="@+id/content_invitation"
-        app:elevation="11dp"
+        app:elevation="10dp"
         android:visibility="visible"
         android:layout_marginRight="16dp"
         app:layout_anchorGravity="center"
-        android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"
-        />
+        android:layout_marginEnd="19dp"
+        android:layout_marginBottom="21dp"
+        android:layout_alignBottom="@+id/content_invitation"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

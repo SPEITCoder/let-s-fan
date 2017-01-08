@@ -106,7 +106,11 @@
         android:layout_height="wrap_content"
         android:max="4"
         android:progress="1"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:focusableInTouchMode="false"
+            android:indeterminate="false"
+            android:keepScreenOn="false"
+            android:isScrollContainer="false" />
 
         <TextView
             android:id="@+id/textView9"

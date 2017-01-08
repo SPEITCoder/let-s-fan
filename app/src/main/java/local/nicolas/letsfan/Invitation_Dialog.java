@@ -68,8 +68,10 @@ public class Invitation_Dialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         //TODO join the invitation
-                        if (invitation == null || user == null) {
+                        if (invitation == null) {
                             Snackbar.make(v, "Join isn't available.", Snackbar.LENGTH_LONG).show();
+                        } else if (user == null) {
+
                         } else {
                             user.joinInvitation(invitation);
                         }

@@ -132,6 +132,8 @@ public class MainActivity extends AppCompatActivity
             if (dataSnapshot.hasChildren()) {
                 currentUser = dataSnapshot.getValue(User.class);
                 updateNav();
+            } else {
+                startActivityForResult(new Intent(MainActivity.this, RegisterUserActivity.class), RC_CREATE_USER);
             }
         }
         @Override

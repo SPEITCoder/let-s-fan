@@ -41,14 +41,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/my_invitation_restaurant"
-                     />
+                    android:paddingTop="20dp"
+                    android:textAlignment="center" />
 
                 <local.nicolas.letsfan.TextDate
                     android:fontFamily="sans-serif-thin"
                     android:id="@+id/my_invitation_date"
                     android:layout_width="match_parent"
                     android:textSize="20sp"
-                    android:layout_height="35dp" />
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:textAlignment="center" />
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -63,12 +66,14 @@
                         android:layout_marginRight="0dp">
 
                         <TextView
-                            android:text="Start time"
+                            android:text="Start Time"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/textView10"
                             android:layout_weight="1"
-                            android:fontFamily="sans-serif" />
+                            android:fontFamily="sans-serif"
+                            android:textAllCaps="false"
+                            android:paddingLeft="5dp" />
 
                         <local.nicolas.letsfan.TextTime
                             android:fontFamily="sans-serif-thin"
@@ -76,7 +81,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="18sp"
-                            android:layout_weight="1" />
+                            android:layout_weight="1"
+                            android:textAlignment="center" />
 
                     </LinearLayout>
 
@@ -96,7 +102,8 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/textView8"
                             android:layout_weight="1"
-                            android:fontFamily="sans-serif" />
+                            android:fontFamily="sans-serif"
+                            android:textAlignment="center" />
 
                         <local.nicolas.letsfan.TextTime
                             android:fontFamily="sans-serif-thin"
@@ -104,7 +111,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="18sp"
-                            android:layout_weight="1" />
+                            android:layout_weight="1"
+                            android:textAlignment="center" />
                     </LinearLayout>
 
                 </LinearLayout>

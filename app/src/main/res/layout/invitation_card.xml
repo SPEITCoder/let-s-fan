@@ -9,12 +9,12 @@
         android:elevation="@dimen/cardview_default_elevation"
         android:padding="10px"
         android:layout_margin="10px"
-        android:layout_height="130dp">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="130dp">>
+            android:layout_height="wrap_content">>
 
             <ImageView
                 android:id="@+id/invitation_card_image"
@@ -113,8 +113,31 @@
 
             </RelativeLayout>
 
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:text="Time Remaining: "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView11"
+                        android:textSize="13sp"
+                        android:layout_weight="1"
+                        android:textAlignment="textEnd" />
+
+                    <TextView
+                        android:text="12h31m"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/remaining_time_textview"
+                        android:textSize="13sp"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
             </LinearLayout>
 
         </RelativeLayout>
 
-</android.support.v7.widget.CardView>
+    </android.support.v7.widget.CardView>

@@ -17,7 +17,7 @@
         <ImageView
             android:layout_width="150sp"
             android:id="@+id/restaurant_image_opened"
-            app:srcCompat="@drawable/canteen_1"
+            app:srcCompat="@drawable/side_nav_backg"
             android:layout_weight="1"
             android:layout_height="150dp"
             android:padding="8dp" />
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_weight="1"
-                android:fontFamily="sans-serif" />
+                android:fontFamily="sans-serif-thin" />
 
             <RelativeLayout
                 android:orientation="horizontal"
@@ -78,6 +78,7 @@
                     <local.nicolas.letsfan.TextTime
 
                         android:id="@+id/invitation_start_opened"
+                        android:fontFamily="sans-serif-thin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
@@ -102,6 +103,7 @@
                     <local.nicolas.letsfan.TextTime
 
                         android:id="@+id/invitation_end_opened"
+                        android:fontFamily="sans-serif-thin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="20sp"

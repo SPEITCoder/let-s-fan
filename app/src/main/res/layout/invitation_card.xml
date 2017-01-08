@@ -19,7 +19,7 @@
 
             <ImageView
                 android:id="@+id/invitation_card_image"
-                    app:srcCompat="@drawable/side_nav_backg"
+                    app:srcCompat="@drawable/canteen_2"
                 android:layout_width="130dp"
                 android:layout_height="130dp"
                 android:padding="0dp" />

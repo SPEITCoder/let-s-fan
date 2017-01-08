@@ -9,41 +9,32 @@
         android:elevation="@dimen/cardview_default_elevation"
         android:padding="10px"
         android:layout_margin="10px"
-        android:layout_height="165dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="160dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_height="match_parent"
-                android:layout_width="110dp">
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp" />
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content">
 
                 <ImageView
-                    android:layout_height="100dp"
-                    android:id="@+id/imageView"
+                    android:id="@+id/my_invitation_imageView"
                     app:srcCompat="@drawable/side_nav_backg"
                     android:layout_marginRight="10dp"
-                    android:layout_width="100dp"
                     android:adjustViewBounds="false"
-                    android:cropToPadding="false" />
+                    android:cropToPadding="false"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent">
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
 
                 <TextView
                     android:text="Restaurant"

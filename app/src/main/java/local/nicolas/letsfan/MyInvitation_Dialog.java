@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+
 /**
  * Created by dell on 2017/1/7.
  */
@@ -61,6 +63,16 @@ public class MyInvitation_Dialog extends DialogFragment {
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
 
+        final ArrayList<Integer> AvatarList = new ArrayList<>();
+        AvatarList.add(R.drawable.corgia);
+        AvatarList.add(R.drawable.dog);
+        AvatarList.add(R.drawable.dribbble_corgi);
+        AvatarList.add(R.drawable.fox_dribbble);
+        AvatarList.add(R.drawable.notacorgi);
+        AvatarList.add(R.drawable.paco);
+        AvatarList.add(R.drawable.puppy);
+        AvatarList.add(R.drawable.schnauzer);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(v)
                 .setNegativeButton("OK", new DialogInterface.OnClickListener() {
@@ -77,12 +89,14 @@ public class MyInvitation_Dialog extends DialogFragment {
                 mViewHolder.class,
                 FirebaseDatabase.getInstance().getReference("invitationAttendees").child(pushId)
         ){
+            int i = 0;
             @Override
             protected void populateViewHolder(mViewHolder viewHolder, InvitationAttendees invitation, final int position) {
                 //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 viewHolder.attendeeNickNameTextView.setText(invitation.getNickName());
                 viewHolder.attendeeStartTextTime.setTime(invitation.getStartTimeHour().intValue(), invitation.getStartTimeMinute().intValue());
                 viewHolder.attendeeEndTextTime.setTime(invitation.getEndTimeHour().intValue(), invitation.getEndTimeMinute().intValue());
+                ((ImageView) viewHolder.itemView.findViewById(R.id.attendee_image)).setImageResource(AvatarList.get(i++ % AvatarList.size()));
             }
         };
 

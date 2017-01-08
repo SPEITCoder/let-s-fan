@@ -113,7 +113,9 @@ public class MyInvitation_Dialog extends DialogFragment {
         mEndTime = (TextTime) v.findViewById(R.id.invitation_end_opened);
         mEventDate = (TextDate) v.findViewById(R.id.invitation_date_opened);
 
-        //mImageView =
+        if(invitation.getRestaurantName().equals("Hallo House")) {mImageView.setImageResource(R.drawable.canteen_1);}
+        else if(invitation.getRestaurantName().equals("1st Canteen, 1F")){mImageView.setImageResource(R.drawable.canteen_2);}
+        else if(invitation.getRestaurantName().equals("1st Canteen, 2F")){mImageView.setImageResource(R.drawable.canteen_3);}
         mRestaurantName.setText(invitation.getRestaurantName());
         mStartTime.setTime(invitation.getStartTimeHour().intValue(), invitation.getStartTimeMinute().intValue());
         mEndTime.setTime(invitation.getEndTimeHour().intValue(), invitation.getEndTimeMinute().intValue());

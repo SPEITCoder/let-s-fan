@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(
                 AuthUI.getInstance().createSignInIntentBuilder()
                         .setTheme(R.style.AppTheme)
-                        .setLogo(R.drawable.ic_restaurant_menu_black_24dp)
+                        .setLogo(R.drawable.lgo)
                         .setProviders(providerList)
                         .setTosUrl("https://github.com/SPEITCoder/let-s-fan")
                         .setIsSmartLockEnabled(true)

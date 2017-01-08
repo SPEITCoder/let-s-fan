@@ -504,6 +504,7 @@ public class MainActivity extends AppCompatActivity
                             EventDialog eventDialog = new EventDialog();
                             Bundle mBundle = new Bundle();
                             mBundle.putString("pushId", event.getId());
+                            mBundle.putSerializable("event", event);
                             eventDialog.setArguments(mBundle);
                             eventDialog.show(getFragmentManager(),"invitationDialog");
                         }

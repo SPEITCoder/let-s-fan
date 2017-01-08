@@ -27,6 +27,14 @@ public class EventDialog extends DialogFragment {
     private LinearLayoutManager mLinearLayoutManager;
     private FirebaseRecyclerAdapter <InvitationAttendees,mViewHolder> mFirebaseAdapter;
 
+    private ImageView mImageView;
+    private TextView mRestaurantName;
+    private TextTime mStartTime;
+    private TextTime mEndTime;
+    private TextDate mEventDate;
+
+    private Events event;
+
     public static class mViewHolder extends RecyclerView.ViewHolder {
         public TextView attendeeNickNameTextView;
         public ImageView attendeeImageView;
@@ -46,6 +54,7 @@ public class EventDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Bundle mBundle = getArguments();
         final String pushId = mBundle.getString("pushId");
+        event = (Events) mBundle.getSerializable("event");
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
@@ -98,6 +107,22 @@ public class EventDialog extends DialogFragment {
 
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setAdapter(mFirebaseAdapter);
+
+
+        mImageView = (ImageView) v.findViewById(R.id.restaurant_image_opened);
+        mRestaurantName = (TextView) v.findViewById(R.id.invitation_restaurant_opened);
+        mStartTime = (TextTime) v.findViewById(R.id.invitation_start_opened);
+        mEndTime = (TextTime) v.findViewById(R.id.invitation_end_opened);
+        mEventDate = (TextDate) v.findViewById(R.id.invitation_date_opened);
+
+        //mImageView =
+        mRestaurantName.setText(event.getRestaurantName());
+        mStartTime.setVisibility(View.GONE);
+        mEndTime.setVisibility(View.GONE);
+        v.findViewById(R.id.textView110).setVisibility(View.GONE);
+        v.findViewById(R.id.textView118).setVisibility(View.GONE);
+        v.findViewById(R.id.space111).setVisibility(View.GONE);
+        mEventDate.setDate(event.getDateYear().intValue(), event.getDateMonth().intValue(), event.getDateDay().intValue());
 
         return builder.create();
     }

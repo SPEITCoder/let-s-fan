@@ -28,6 +28,11 @@ public class Invitation_Dialog extends DialogFragment {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private FirebaseRecyclerAdapter <InvitationAttendees,mViewHolder> mFirebaseAdapter;
+    private ImageView mImageView;
+    private TextView mRestaurantName;
+    private TextTime mStartTime;
+    private TextTime mEndTime;
+    private TextDate mEventDate;
 
     public static class mViewHolder extends RecyclerView.ViewHolder {
         public TextView attendeeNickNameTextView;
@@ -113,6 +118,18 @@ public class Invitation_Dialog extends DialogFragment {
 
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setAdapter(mFirebaseAdapter);
+
+        mImageView = (ImageView) v.findViewById(R.id.restaurant_image_opened);
+        mRestaurantName = (TextView) v.findViewById(R.id.invitation_restaurant_opened);
+        mStartTime = (TextTime) v.findViewById(R.id.invitation_start_opened);
+        mEndTime = (TextTime) v.findViewById(R.id.invitation_end_opened);
+        mEventDate = (TextDate) v.findViewById(R.id.invitation_date_opened);
+
+        //mImageView =
+        mRestaurantName.setText(invitation.getRestaurantName());
+        mStartTime.setTime(invitation.getStartTimeHour().intValue(), invitation.getStartTimeMinute().intValue());
+        mEndTime.setTime(invitation.getEndTimeHour().intValue(), invitation.getEndTimeMinute().intValue());
+        mEventDate.setDate(invitation.getDateYear().intValue(), invitation.getDateMonth().intValue(), invitation.getDateDay().intValue());
 
         return builder.create();
     }

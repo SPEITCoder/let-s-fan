@@ -33,17 +33,39 @@
             android:layout_toEndOf="@+id/invitation_card_image"
             android:layout_centerVertical="true">
 
-            <RelativeLayout
+            <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:text="ihi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/invitation_organiser"
+
+                    android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                    android:textAlignment="textEnd"
+                    android:fontFamily="sans-serif"
+                    android:textSize="20sp"
+                    android:textAllCaps="false"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_toLeftOf="@+id/textView14"
+
+                    android:layout_marginRight="3dp" />
 
                 <TextView
                     android:text="\@"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/textView14"
-                    android:padding="2dp"
+                    android:padding="0dp"
                     android:textAlignment="center"
                     android:fontFamily="sans-serif"
                     android:textSize="20sp"
@@ -58,33 +80,18 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/invitation_restaurant"
                     android:textAppearance="@android:style/TextAppearance.Material.Medium"
-                    android:textAlignment="center"
+                    android:textAlignment="textStart"
 
                     android:fontFamily="sans-serif"
                     android:textSize="20sp"
                     android:textAllCaps="false"
                     android:layout_weight="1"
                     android:layout_toRightOf="@+id/textView14"
-                    android:layout_alignParentEnd="true" />
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginLeft="2dp"
+                    android:maxLines="1" />
 
-                <TextView
-                    android:text="ihi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/invitation_organiser"
-
-                    android:textAppearance="@android:style/TextAppearance.Material.Medium"
-                    android:textAlignment="center"
-                    android:fontFamily="sans-serif"
-                    android:textSize="20sp"
-                    android:textAllCaps="false"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_toLeftOf="@+id/textView14"
-
-                     />
-
-            </RelativeLayout>
+            </LinearLayout>
 
             <local.nicolas.letsfan.TextDate
                         android:fontFamily="sans-serif-thin"

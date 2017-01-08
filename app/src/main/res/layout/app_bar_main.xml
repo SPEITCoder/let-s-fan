@@ -60,4 +60,18 @@
         android:layout_alignBottom="@+id/content_invitation"
         android:layout_alignParentEnd="true" />
 
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar2"
+        android:layout_marginBottom="187dp"
+        android:indeterminate="true"
+        android:layout_above="@+id/floatingActionButton2"
+        android:layout_centerHorizontal="true"
+        tools:visibility="gone"
+        android:progressTint="@color/colorAccent"
+        android:progressBackgroundTint="@color/cardview_shadow_start_color"
+        android:visibility="gone" />
+
 </RelativeLayout>

@@ -2,6 +2,7 @@ package local.nicolas.letsfan;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -195,7 +196,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             protected void populateViewHolder(InvitationViewHolder viewHolder, final Invitation invitation, final int position) {
                 //mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-
                 viewHolder.organizerTextView.setText(invitation.getOrganizerNickName());
                 viewHolder.dateTextView.setDate(invitation.getDateYear().intValue(), invitation.getDateMonth().intValue(), invitation.getDateDay().intValue());
                 viewHolder.startTextView.setTime(invitation.getStartTimeHour().intValue(), invitation.getStartTimeMinute().intValue());
@@ -369,16 +369,24 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
                 currentUser = (User) data.getSerializableExtra("currentUser");
                 updateNav();
+                findViewById(R.id.progressBar2).setVisibility(View.VISIBLE);
+                CountDownTimer mCountDownTimer = new CountDownTimer(5000,1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        findViewById(R.id.progressBar2).setVisibility(View.GONE);
+                    }
+                };
+                mCountDownTimer.start();
             } else {
                 Snackbar.make(mRootView, "User registration failure!" , Snackbar.LENGTH_LONG).setActionTextColor(getColor(R.color.white))
                         .setAction("Action", null).show();
             }
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
 
@@ -487,6 +495,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
+
+        findViewById(R.id.progressBar2).setVisibility(View.VISIBLE);
+        CountDownTimer mCountDownTimer = new CountDownTimer(2000,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+            }
+
+            @Override
+            public void onFinish() {
+                findViewById(R.id.progressBar2).setVisibility(View.GONE);
+            }
+        };
+        mCountDownTimer.start();
     }
 
     private void updateNav() {

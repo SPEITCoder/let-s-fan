@@ -1,97 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10sp">
+    android:layout_margin="10sp"
+    android:padding="10sp">
 
-    <ImageView
-        android:layout_width="200sp"
-        android:id="@+id/restaurant_image_opened"
-        app:srcCompat="@drawable/side_nav_backg"
-        android:layout_height="200sp" />
-
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
-        <TextView
-            android:text="Restaurant"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/invitation_restaurant_opened"
+        <ImageView
+            android:layout_width="150sp"
+            android:id="@+id/restaurant_image_opened"
+            app:srcCompat="@drawable/canteen_1"
             android:layout_weight="1"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
-
-        <local.nicolas.letsfan.TextDate
-            android:fontFamily="sans-serif-thin"
-            android:id="@+id/invitation_date_opened"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:layout_weight="1" />
+            android:layout_height="150dp" />
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
+            android:orientation="vertical"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
+            android:gravity="center_vertical|fill_horizontal"
+            android:layout_gravity="center_vertical"
+            android:baselineAligned="true"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/restaurant_image_opened"
+            android:paddingLeft="10sp">
+
+            <TextView
+                android:text="Restaurant"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="0dp">
+                android:id="@+id/invitation_restaurant_opened"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
-                <TextView
-                    android:text="Start time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView110"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif" />
-
-                <local.nicolas.letsfan.TextTime
-                    android:fontFamily="sans-serif-thin"
-                    android:id="@+id/invitation_start_opened"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:layout_weight="1" />
-
-            </LinearLayout>
-
-            <Space
-                android:layout_width="30dp"
-                android:id="@+id/space111"
+            <local.nicolas.letsfan.TextDate
+                android:fontFamily="sans-serif-thin"
+                android:id="@+id/invitation_date_opened"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="20sp"
                 android:layout_weight="1" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+            <RelativeLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
 
-                <TextView
-                    android:text="End Time"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textView118"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif" />
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="0dp">
 
-                <local.nicolas.letsfan.TextTime
-                    android:fontFamily="sans-serif-thin"
-                    android:id="@+id/invitation_end_opened"
-                    android:layout_width="match_parent"
+                    <TextView
+                        android:text="Start time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView110"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif" />
+
+                    <local.nicolas.letsfan.TextTime
+                        android:fontFamily="sans-serif-thin"
+                        android:id="@+id/invitation_start_opened"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:layout_weight="1" />
-            </LinearLayout>
+                    android:layout_alignParentEnd="true">
 
+                    <TextView
+                        android:text="End Time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView118"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif" />
+
+                    <local.nicolas.letsfan.TextTime
+                        android:fontFamily="sans-serif-thin"
+                        android:id="@+id/invitation_end_opened"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+            </RelativeLayout>
         </LinearLayout>
-    </LinearLayout>
+
+    </RelativeLayout>
 
     <TextView
         android:text="Attendee List"
@@ -99,7 +114,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/invitation_organiser_opened"
         android:layout_gravity="center"
-        android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+        android:padding="5sp" />
 
     <TextView
 android:text="up to 3 people"
@@ -107,16 +123,19 @@ android:layout_width="match_parent"
 android:layout_height="wrap_content"
 android:id="@+id/invitation_available_slot"
 android:layout_gravity="center"
-android:textSize="14sp" />
+android:textSize="14sp"
+        android:padding="5sp" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="67dp">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/attendee_recycler" />
+            android:id="@+id/attendee_recycler"
+            android:layout_marginBottom="0dp"
+            android:layout_marginEnd="0dp" />
     </ScrollView>
 
 </LinearLayout>

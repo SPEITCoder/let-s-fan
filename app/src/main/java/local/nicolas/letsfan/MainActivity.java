@@ -34,7 +34,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity
         public TextTime startTextView;
         public TextTime endTextView;
         public ImageView invitationImageView;
+        public TextView restTextView;
 
         public InvitationViewHolder(View v) {
             super(v);
@@ -95,6 +98,8 @@ public class MainActivity extends AppCompatActivity
             dateTextView = (TextDate) itemView.findViewById(R.id.invitation_card_date);
             startTextView = (TextTime) itemView.findViewById(R.id.invitation_card_start);
             endTextView = (TextTime) itemView.findViewById(R.id.invitation_card_end);
+            restTextView=(TextView) itemView.findViewById(R.id.textView11);
+
         }
     }
 
@@ -193,6 +198,20 @@ public class MainActivity extends AppCompatActivity
                 viewHolder.dateTextView.setDate(invitation.getDateYear().intValue(), invitation.getDateMonth().intValue(), invitation.getDateDay().intValue());
                 viewHolder.startTextView.setTime(invitation.getStartTimeHour().intValue(), invitation.getStartTimeMinute().intValue());
                 viewHolder.endTextView.setTime(invitation.getEndTimeHour().intValue(), invitation.getEndTimeMinute().intValue());
+
+                final Calendar calendar = Calendar.getInstance();
+
+                TimeZone tz=TimeZone.getTimeZone("GMT");
+                calendar.setTimeZone(tz);
+                Long currentTime=calendar.getTimeInMillis();
+                calendar.set(invitation.getDateYear().intValue(),invitation.getDateMonth().intValue()-1,invitation.getDateDay().intValue(),invitation.getStartTimeHour().intValue(),invitation.getStartTimeMinute().intValue());
+
+                Long starttime=calendar.getTimeInMillis();
+                Long timediff=starttime-currentTime;
+                timediff /= 60000;
+                Long diffHour = timediff/ 60;
+                Long diffMin = timediff % 60;
+                viewHolder.restTextView.setText(String.valueOf(diffHour)+"H"+String.valueOf(diffMin)+"Min");
 
                 if(invitation.getRestaurantName().equals("Hallo House")) {viewHolder.invitationImageView.setImageResource(R.drawable.canteen_1);}
                 else if(invitation.getRestaurantName().equals("1st Canteen, 1F")){viewHolder.invitationImageView.setImageResource(R.drawable.canteen_2);}

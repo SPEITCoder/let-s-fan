@@ -78,6 +78,13 @@
                             android:textSize="18sp"
                             android:layout_weight="1" />
 
+                        <TextView
+                            android:text="TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView11"
+                            android:layout_weight="1" />
+
                     </LinearLayout>
 
                     <LinearLayout
